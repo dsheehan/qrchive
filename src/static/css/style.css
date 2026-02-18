@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600&display=swap');
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f4f4f4;
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+    text-align: center;
+}
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+.maximize-btn {
+    color: #aaa;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.modal-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 5px;
+}
+.close:hover,
+.close:focus,
+.maximize-btn:hover,
+.maximize-btn:focus {
+    color: black;
+    text-decoration: none;
+}
+.modal-content.maximized {
+    width: 90%;
+    height: 90%;
+    margin: 2% auto;
+    display: flex;
+    flex-direction: column;
+}
+.modal-content.maximized .qrcode-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Styles from qrcode.html */
+.qr-generator-body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+}
+.modal-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.matter-logo {
+    height: 24px;
+}
+.matter-wordmark {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.5px;
+    color: #000;
+    text-transform: lowercase;
+    margin-left: 5px;
+    line-height: 1;
+}
+.qrcode-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+.pairing-code-text {
+    margin-top: 10px;
+    font-family: monospace;
+}
+.matter-code-text {
+    margin-top: 5px;
+    font-size: 0.8em;
+    color: #666;
+    font-family: monospace;
+}
+input {
+    padding: 8px;
+    width: 250px;
+    font-size: 16px;
+}
+button {
+    padding: 8px 15px;
+    font-size: 16px;
+    margin-left: 5px;
+    cursor: pointer;
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matter Devices</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Matter Devices</h1>
+    <table>
+        <thead>
+            <tr>
+                {% for header in headers %}
+                <th>{{ header }}</th>
+                {% endfor %}
+                <th>QR Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                {% for header in headers %}
+                <td>{{ row[header] }}</td>
+                {% endfor %}
+                <td>
+                    {% if row['Pairing Code'] %}
+                    <button onclick="showQRCode('{{ row['Pairing Code'] }}', '{{ row['Product'] }}', '{{ row['QR'] or '' }}')">Show QR</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="qrModal" class="modal">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-controls">
+                <span id="maximizeBtn" class="maximize-btn" onclick="toggleMaximize()">&#10530;</span>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <h3 id="modalTitle" class="modal-title">
+                <div style="display: flex; align-items: center;">
+                    <img src="{{ url_for('static', filename='img/matter.svg') }}" alt="Matter" class="matter-logo">
+                    <span class="matter-wordmark">matter</span>
+                </div>
+                <span id="productTitle"></span>
+            </h3>
+            <div id="qrcode" class="qrcode-container"></div>
+            <p id="pairingCodeText" class="pairing-code-text"></p>
+            <p id="matterCodeText" class="matter-code-text"></p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script>
+        // Provide a way for tests to access the formatting logic if needed,
+        // but mostly we want to ensure the generated JS is valid.
+    </script>
+    <script src="{{ url_for('static', filename='js/matter.js') }}"></script>
+</body>
+</html>

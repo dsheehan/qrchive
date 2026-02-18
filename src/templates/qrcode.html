@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client-Side QR Code Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="qr-generator-body">
+
+    <h2>QR Code Generator (Client-Side)</h2>
+    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <img src="{{ url_for('static', filename='img/matter.svg') }}" alt="Matter" style="height: 32px;">
+        <span class="matter-wordmark" style="font-size: 32px;">matter</span>
+    </div>
+    <input type="text" id="text" placeholder="Enter text or URL">
+    <button onclick="generateQRCode()">Generate</button>
+
+    <div id="qrcode" class="qrcode-container"></div>
+
+    <!-- QR Code Styling library (CDN) -->
+    <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script src="{{ url_for('static', filename='js/qrcode.js') }}"></script>
+</body>
+</html>
