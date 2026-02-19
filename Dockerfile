@@ -25,7 +25,7 @@ COPY --chown=appuser:appuser pyproject.toml ./
 
 # Install dependencies
 RUN --mount=type=cache,target=/home/appuser/.cache/uv,uid=1000,gid=1000 \
-    uv sync --frozen --no-dev
+    uv sync --no-dev
 
 # Copy the rest of the application
 COPY --chown=appuser:appuser src/ ./src/
