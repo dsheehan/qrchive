@@ -16,7 +16,7 @@ class TestApp(unittest.TestCase):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Matter Devices', response.data)
-        self.assertIn(b'<table>', response.data)
+        self.assertIn(b'<table', response.data)
         self.assertIn(b'Tapo S505D', response.data) # Check if data from CSV is present
 
     def test_matter_table_has_qr_column(self):

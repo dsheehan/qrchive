@@ -1,3 +1,33 @@
+// Simple Bootstrap-compatible theme toggle with persistence
+(function() {
+    const html = document.documentElement;
+    const storageKey = 'theme';
+    // Initialize theme from localStorage or system preference
+    function getPreferredTheme() {
+        const saved = localStorage.getItem(storageKey);
+        if (saved === 'light' || saved === 'dark') return saved;
+        // fallback to current attribute or system
+        if (html.getAttribute('data-bs-theme')) return html.getAttribute('data-bs-theme');
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    function setTheme(t) {
+        html.setAttribute('data-bs-theme', t);
+        localStorage.setItem(storageKey, t);
+    }
+    window.toggleTheme = function() {
+        const current = html.getAttribute('data-bs-theme') || getPreferredTheme();
+        setTheme(current === 'dark' ? 'light' : 'dark');
+    }
+    // Apply on load
+    setTheme(getPreferredTheme());
+    // Keep in sync with OS changes when no explicit preference stored
+    if (!localStorage.getItem(storageKey) && window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            setTheme(e.matches ? 'dark' : 'light');
+        });
+    }
+})();
+
 const BASE38_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ -.";
 
 function encodeBase38(val) {
@@ -49,20 +79,23 @@ function formatMatterQR(pairingCode) {
 let qrCode;
 let isMaximized = false;
 let currentCode, currentProduct, currentPrecomputedQR;
+let bootstrapModal;
 
 function showQRCode(code, product, precomputedQR, skipPushState = false, maximized = null) {
     currentCode = code;
     currentProduct = product;
     currentPrecomputedQR = precomputedQR;
 
-    const modal = document.getElementById("qrModal");
-    const modalContent = document.getElementById("modalContent");
+    const modalEl = document.getElementById("qrModal");
+    const modalDialog = document.getElementById("modalDialog");
     const qrcodeDiv = document.getElementById("qrcode");
     const productTitle = document.getElementById("productTitle");
     const codeText = document.getElementById("pairingCodeText");
 
-    // Reset maximized state when opening a new QR code (or keep it?)
-    // Let's reset it for consistency unless it's a popstate/load
+    if (!bootstrapModal) {
+        bootstrapModal = new bootstrap.Modal(modalEl);
+    }
+
     if (!skipPushState) {
         isMaximized = maximized !== null ? maximized : false;
     } else if (maximized !== null) {
@@ -70,14 +103,15 @@ function showQRCode(code, product, precomputedQR, skipPushState = false, maximiz
     }
 
     if (isMaximized) {
-        modalContent.classList.add("maximized");
-        document.getElementById("maximizeBtn").innerHTML = "&#10529;"; // Restore (diagonal inwards)
+        modalDialog.classList.add("modal-fullscreen");
+        document.getElementById("maximizeBtn").innerHTML = '<i class="fa-solid fa-down-left-and-up-right-to-center"></i>'; // Restore/Minimize
+        document.getElementById("maximizeBtn").title = "Restore";
     } else {
-        modalContent.classList.remove("maximized");
-        document.getElementById("maximizeBtn").innerHTML = "&#10530;"; // Maximize (diagonal outwards)
+        modalDialog.classList.remove("modal-fullscreen");
+        document.getElementById("maximizeBtn").innerHTML = '<i class="fa-solid fa-up-right-and-down-left-from-center"></i>'; // Maximize
+        document.getElementById("maximizeBtn").title = "Maximize";
     }
 
-    // Use precomputed QR if available, otherwise generate on the fly
     const matterCode = precomputedQR || formatMatterQR(code);
 
     if (productTitle) {
@@ -90,9 +124,9 @@ function showQRCode(code, product, precomputedQR, skipPushState = false, maximiz
     }
     qrcodeDiv.innerHTML = "";
     
-    modal.style.display = "block";
+    bootstrapModal.show();
 
-    const size = isMaximized ? Math.min(window.innerWidth, window.innerHeight) * 0.7 : 200;
+    const size = isMaximized ? Math.min(window.innerWidth, window.innerHeight) * 0.7 : 250;
 
     qrCode = new QRCodeStyling({
         width: size,
@@ -152,9 +186,8 @@ function toggleMaximize() {
 }
 
 function closeModal() {
-    const modal = document.getElementById("qrModal");
-    if (modal) {
-        modal.style.display = "none";
+    if (bootstrapModal) {
+        bootstrapModal.hide();
     }
     const params = new URLSearchParams(window.location.search);
     if (params.has("code") || params.has("product") || params.has("qr") || params.has("maximized")) {
@@ -169,10 +202,7 @@ function closeModal() {
 }
 
 window.onclick = function(event) {
-    const modal = document.getElementById("qrModal");
-    if (event.target == modal) {
-        closeModal();
-    }
+    // Bootstrap handles closing on backdrop click
 }
 
 function checkUrlParams() {
@@ -199,10 +229,152 @@ window.addEventListener("popstate", (event) => {
         if (code && product) {
             showQRCode(code, product, qr, true, maximized);
         } else {
-            const modal = document.getElementById("qrModal");
-            if (modal && modal.style.display === "block") {
-                modal.style.display = "none";
+            if (bootstrapModal) {
+                bootstrapModal.hide();
             }
         }
     }
 });
+
+// ---- Advanced table features: filtering, sorting, column hiding ----
+(function(){
+    function getTable() {
+        return document.getElementById('devicesTable');
+    }
+    function getHeaderCells(table){
+        return table ? table.tHead.querySelectorAll('th[data-col-index]') : [];
+    }
+    function getBodyRows(table){
+        return table ? table.tBodies[0].rows : [];
+    }
+    function isColumnVisible(idx){
+        const cb = document.getElementById('col-toggle-' + idx);
+        return !cb || cb.checked; // default visible if control missing
+    }
+    function applyColumnVisibility(){
+        const table = getTable();
+        if (!table) return;
+        const headers = getHeaderCells(table);
+        headers.forEach((th)=>{
+            const idx = parseInt(th.getAttribute('data-col-index'));
+            const show = isColumnVisible(idx);
+            th.style.display = show ? '' : 'none';
+        });
+        const rows = getBodyRows(table);
+        Array.from(rows).forEach((tr)=>{
+            Array.from(tr.cells).forEach((td, i)=>{
+                // last column is QR Code button; do not control it here
+                if (i < headers.length) {
+                    const show = isColumnVisible(i);
+                    td.style.display = show ? '' : 'none';
+                }
+            });
+        });
+    }
+    function normalize(val){
+        return (val||'').toString().trim();
+    }
+    function cmp(a,b){
+        const an = parseFloat(a); const bn = parseFloat(b);
+        const aNum = !isNaN(an) && a.match(/^[-+]?\d+(?:\.\d+)?$/);
+        const bNum = !isNaN(bn) && b.match(/^[-+]?\d+(?:\.\d+)?$/);
+        if (aNum && bNum) return an - bn;
+        return a.localeCompare(b, undefined, { sensitivity: 'base', numeric: true });
+    }
+    function clearSortIndicators(table){
+        getHeaderCells(table).forEach(th=>{
+            th.setAttribute('aria-sort','none');
+            const icon = th.querySelector('i.fa-solid');
+            if (icon){ icon.classList.remove('fa-sort-up','fa-sort-down'); icon.classList.add('fa-sort'); }
+        });
+    }
+    function setSortIndicator(th, asc){
+        th.setAttribute('aria-sort', asc ? 'ascending' : 'descending');
+        const icon = th.querySelector('i.fa-solid');
+        if (icon){ icon.classList.remove('fa-sort'); icon.classList.add(asc ? 'fa-sort-up' : 'fa-sort-down'); }
+    }
+    function sortTableByColumn(table, column, asc){
+        const tbody = table.tBodies[0];
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.sort((r1, r2)=>{
+            const c1 = normalize((r1.cells[column] || {}).innerText || '');
+            const c2 = normalize((r2.cells[column] || {}).innerText || '');
+            const res = cmp(c1, c2);
+            return asc ? res : -res;
+        });
+        rows.forEach(r=>tbody.appendChild(r));
+    }
+    function applyGlobalFilter(){
+        const table = getTable();
+        if (!table) return;
+        const q = (document.getElementById('globalFilter')?.value || '').toLowerCase().trim();
+        const words = q.split(/\s+/).filter(w => w.length > 0);
+        const headers = getHeaderCells(table);
+        const rows = getBodyRows(table);
+        
+        Array.from(rows).forEach(tr=>{
+            let match = true;
+            if (words.length > 0) {
+                // For each word, we must find it in at least one visible column
+                for (const word of words) {
+                    let wordFound = false;
+                    for (let i=0; i<headers.length; i++) {
+                        if (!isColumnVisible(i)) continue;
+                        const text = (tr.cells[i]?.innerText || '').toLowerCase();
+                        if (text.includes(word)) {
+                            wordFound = true;
+                            break;
+                        }
+                    }
+                    if (!wordFound) {
+                        match = false;
+                        break;
+                    }
+                }
+            }
+            tr.style.display = match ? '' : 'none';
+        });
+    }
+    function bindSorting(){
+        const table = getTable();
+        if (!table) return;
+        const headers = getHeaderCells(table);
+        const state = {};
+        headers.forEach((th)=>{
+            const idx = parseInt(th.getAttribute('data-col-index'));
+            function activate(){
+                const asc = !(state[idx] === true); // toggle
+                clearSortIndicators(table);
+                sortTableByColumn(table, idx, asc);
+                setSortIndicator(th, asc);
+                state[idx] = asc;
+            }
+            th.addEventListener('click', activate);
+            th.addEventListener('keypress', (e)=>{ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }});
+        });
+    }
+    function bindColumnToggles(){
+        const toggles = document.querySelectorAll('.column-toggle');
+        toggles.forEach(cb=>{
+            cb.addEventListener('change', ()=>{
+                applyColumnVisibility();
+                applyGlobalFilter();
+            });
+        });
+    }
+    function bindFilter(){
+        const input = document.getElementById('globalFilter');
+        if (input){ input.addEventListener('input', applyGlobalFilter); }
+    }
+    function init(){
+        applyColumnVisibility();
+        bindSorting();
+        bindColumnToggles();
+        bindFilter();
+    }
+    if (document.readyState === 'loading'){
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();

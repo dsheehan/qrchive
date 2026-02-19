@@ -1,62 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matter Devices</title>
+    <link href="https://cdn.jsdelivr.net/npm/halfmoon@2.0.2/css/halfmoon.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Matter Devices</h1>
-    <table>
-        <thead>
-            <tr>
-                {% for header in headers %}
-                <th>{{ header }}</th>
-                {% endfor %}
-                <th>QR Code</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in data %}
-            <tr>
-                {% for header in headers %}
-                <td>{{ row[header] }}</td>
-                {% endfor %}
-                <td>
-                    {% if row['Pairing Code'] %}
-                    <button onclick="showQRCode('{{ row['Pairing Code'] }}', '{{ row['Product'] }}', '{{ row['QR'] or '' }}')">Show QR</button>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <div id="qrModal" class="modal">
-        <div class="modal-content" id="modalContent">
-            <div class="modal-controls">
-                <span id="maximizeBtn" class="maximize-btn" onclick="toggleMaximize()">&#10530;</span>
-                <span class="close" onclick="closeModal()">&times;</span>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fa-sharp fa-solid fa-qrcode"></i>
+                <span class="matter-wordmark">QRCodex</span>
+            </a>
+            <div class="ms-auto">
+                <button class="btn btn-secondary border-0" type="button" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                    <i class="fa-solid fa-moon d-block-light-only" title="Switch to Dark Mode"></i>
+                    <i class="fa-solid fa-sun d-block-dark-only" title="Switch to Light Mode"></i>
+                </button>
             </div>
-            <h3 id="modalTitle" class="modal-title">
-                <div style="display: flex; align-items: center;">
-                    <img src="{{ url_for('static', filename='img/matter.svg') }}" alt="Matter" class="matter-logo">
-                    <span class="matter-wordmark">matter</span>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <h1 class="mb-4">Matter Devices</h1>
+        <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+            <div class="flex-grow-1 search-container">
+                <input id="globalFilter" type="search" class="form-control" placeholder="Filter devices..." aria-label="Filter devices">
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Columns
+                </button>
+                <ul class="dropdown-menu p-2 columns-dropdown-menu">
+                    {% for header in headers %}
+                    <li class="form-check px-2">
+                        <input class="form-check-input column-toggle" type="checkbox" value="{{ loop.index0 }}" id="col-toggle-{{ loop.index0 }}" checked>
+                        <label class="form-check-label" for="col-toggle-{{ loop.index0 }}">{{ header }}</label>
+                    </li>
+                    {% endfor %}
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="px-2 small text-muted">Uncheck to hide a column</li>
+                </ul>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table id="devicesTable" class="table table-striped table-hover mt-0">
+                <thead>
+                    <tr>
+                        {% for header in headers %}
+                        <th data-col-index="{{ loop.index0 }}" class="sortable" role="button" tabindex="0" aria-sort="none">
+                            <span class="me-1">{{ header }}</span>
+                            <i class="fa-solid fa-sort text-muted"></i>
+                        </th>
+                        {% endfor %}
+                        <th>QR Code</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                    <tr>
+                        {% for header in headers %}
+                        <td>{{ row[header] }}</td>
+                        {% endfor %}
+                        <td>
+                            {% if row['Pairing Code'] %}
+                            <button class="btn btn-primary btn-sm" onclick="showQRCode('{{ row['Pairing Code'] }}', '{{ row['Product'] }}', '{{ row['QR'] or '' }}')">Show QR</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" id="modalDialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="me-auto modal-header-spacer"></div>
+                    <h5 class="modal-title" id="qrModalLabel">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <img src="{{ url_for('static', filename='img/matter.svg') }}" alt="Matter" class="matter-logo">
+                            <span class="matter-wordmark">matter</span>
+                        </div>
+                        <div id="productTitle" class="text-center mt-1"></div>
+                    </h5>
+                    <div class="ms-auto d-flex align-items-center justify-content-end modal-header-spacer">
+                        <button type="button" id="maximizeBtn" class="btn btn-sm btn-outline-secondary me-2" onclick="toggleMaximize()" title="Maximize">
+                            <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary m-0" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()" title="Close">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
                 </div>
-                <span id="productTitle"></span>
-            </h3>
-            <div id="qrcode" class="qrcode-container"></div>
-            <p id="pairingCodeText" class="pairing-code-text"></p>
-            <p id="matterCodeText" class="matter-code-text"></p>
+                <div class="modal-body text-center">
+                    <div id="qrcode" class="qrcode-container mb-3"></div>
+                    <p id="pairingCodeText" class="pairing-code-text mb-1 fw-bold"></p>
+                    <p id="matterCodeText" class="matter-code-text mb-0 text-muted small"></p>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
-    <script>
-        // Provide a way for tests to access the formatting logic if needed,
-        // but mostly we want to ensure the generated JS is valid.
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha256-CDOy6cOibCWEdsRiZuaHf8dSGGJRYuBGC+mjoJimHGw=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/halfmoon@2.0.2/js/halfmoon.min.js"></script>
     <script src="{{ url_for('static', filename='js/matter.js') }}"></script>
 </body>
 </html>

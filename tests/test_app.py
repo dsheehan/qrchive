@@ -16,7 +16,7 @@ class FlaskTestCase(unittest.TestCase):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Matter Devices', response.data)
-        self.assertIn(b'<table>', response.data)
+        self.assertIn(b'<table', response.data)
 
     def test_qrcode_route(self):
         response = self.app.get('/qrcode')
