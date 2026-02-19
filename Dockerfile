@@ -5,12 +5,13 @@ FROM ghcr.io/astral-sh/uv:python3.14-trixie-slim
 WORKDIR /app
 
 # Create a non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN groupadd -g 1000 appuser && useradd -u 1000 -g 1000 -m appuser
 
 # Install dependencies using a cache mount for faster builds
 # and keep the environment in /app/.venv
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
+ENV UV_CACHE_DIR=/home/appuser/.cache/uv
 
 # Create data directory at the root and set permissions (needs root)
 USER root
@@ -21,7 +22,7 @@ USER appuser
 COPY --chown=appuser:appuser pyproject.toml ./
 
 # Install dependencies
-RUN --mount=type=cache,target=/root/.cache/uv \
+RUN --mount=type=cache,target=/home/appuser/.cache/uv,uid=1000,gid=1000 \
     uv sync --frozen --no-dev
 
 # Copy the rest of the application
