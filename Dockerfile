@@ -4,8 +4,10 @@ FROM ghcr.io/astral-sh/uv:python3.14-trixie-slim
 # Set working directory
 WORKDIR /app
 
-# Create a non-root user
-RUN groupadd -g 1000 appuser && useradd -u 1000 -g 1000 -m appuser
+# Create a non-root user and set ownership of /app
+RUN groupadd -g 1000 appuser && \
+    useradd -u 1000 -g 1000 -m appuser && \
+    chown appuser:appuser /app
 
 # Install dependencies using a cache mount for faster builds
 # and keep the environment in /app/.venv
