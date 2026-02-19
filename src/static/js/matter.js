@@ -80,6 +80,136 @@ let qrCode;
 let isMaximized = false;
 let currentCode, currentProduct, currentPrecomputedQR;
 let bootstrapModal;
+let deviceModal;
+
+function openDeviceModal(mac = null, skipPushState = false) {
+    const modalEl = document.getElementById("deviceModal");
+    if (!deviceModal) {
+        deviceModal = new bootstrap.Modal(modalEl);
+        
+        // Handle URL cleanup when modal is closed (via button, backdrop, or ESC)
+        modalEl.addEventListener('hidden.bs.modal', () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has("edit") || params.has("add")) {
+                params.delete("edit");
+                params.delete("add");
+                const search = params.toString();
+                const newUrl = window.location.pathname + (search ? "?" + search : "");
+                window.history.pushState({}, "", newUrl);
+            }
+        });
+    }
+
+    const form = document.getElementById("deviceForm");
+    form.reset();
+    document.getElementById("originalMac").value = mac || "";
+    document.getElementById("deviceModalLabel").innerText = mac ? "Edit Device" : "Add New Device";
+    document.getElementById("deleteBtn").style.display = mac ? "block" : "none";
+
+    if (mac) {
+        // Find the row with this MAC and populate form
+        const row = document.querySelector(`tr[data-mac="${mac}"]`);
+        if (row) {
+            const cells = row.querySelectorAll('td[data-header]');
+            cells.forEach(td => {
+                const header = td.getAttribute('data-header');
+                const input = form.querySelector(`[name="${header}"]`);
+                if (input) {
+                    input.value = td.innerText;
+                }
+            });
+        }
+    }
+
+    if (!skipPushState) {
+        const params = new URLSearchParams(window.location.search);
+        if (mac) {
+            params.set("edit", mac);
+            params.delete("add");
+        } else {
+            params.set("add", "true");
+            params.delete("edit");
+        }
+        // Also clear QR parameters when opening device modal
+        params.delete("code");
+        params.delete("product");
+        params.delete("qr");
+        params.delete("maximized");
+        
+        const newUrl = window.location.pathname + "?" + params.toString();
+        window.history.pushState({ edit: mac, add: !mac }, "", newUrl);
+    }
+
+    deviceModal.show();
+}
+
+async function saveDevice() {
+    const form = document.getElementById("deviceForm");
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => {
+        if (key !== 'originalMac') {
+            data[key] = value;
+        }
+    });
+
+    const originalMac = document.getElementById("originalMac").value;
+    const isEdit = originalMac !== "";
+    const url = isEdit ? `/matter/${encodeURIComponent(originalMac)}` : '/matter';
+    const method = isEdit ? 'PUT' : 'POST';
+
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            deviceModal.hide();
+            window.location.reload(); // Simple way to refresh the table
+        } else {
+            const error = await response.json();
+            alert("Error: " + (error.error || "Failed to save device"));
+        }
+    } catch (err) {
+        console.error("Save error:", err);
+        alert("An error occurred while saving.");
+    }
+}
+
+async function deleteDevice() {
+    const originalMac = document.getElementById("originalMac").value;
+    if (!originalMac) return;
+
+    if (!confirm(`Are you sure you want to delete the device with MAC: ${originalMac}?`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/matter/${encodeURIComponent(originalMac)}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            deviceModal.hide();
+            window.location.reload();
+        } else {
+            const error = await response.json();
+            alert("Error: " + (error.error || "Failed to delete device"));
+        }
+    } catch (err) {
+        console.error("Delete error:", err);
+        alert("An error occurred while deleting.");
+    }
+}
 
 function showQRCode(code, product, precomputedQR, skipPushState = false, maximized = null) {
     currentCode = code;
@@ -94,6 +224,20 @@ function showQRCode(code, product, precomputedQR, skipPushState = false, maximiz
 
     if (!bootstrapModal) {
         bootstrapModal = new bootstrap.Modal(modalEl);
+
+        // Handle URL cleanup when modal is closed
+        modalEl.addEventListener('hidden.bs.modal', () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has("code") || params.has("product") || params.has("qr") || params.has("maximized")) {
+                params.delete("code");
+                params.delete("product");
+                params.delete("qr");
+                params.delete("maximized");
+                const search = params.toString();
+                const newUrl = window.location.pathname + (search ? "?" + search : "");
+                window.history.pushState({}, "", newUrl);
+            }
+        });
     }
 
     if (!skipPushState) {
@@ -189,20 +333,16 @@ function closeModal() {
     if (bootstrapModal) {
         bootstrapModal.hide();
     }
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("code") || params.has("product") || params.has("qr") || params.has("maximized")) {
-        params.delete("code");
-        params.delete("product");
-        params.delete("qr");
-        params.delete("maximized");
-        const search = params.toString();
-        const newUrl = window.location.pathname + (search ? "?" + search : "");
-        window.history.pushState({}, "", newUrl);
-    }
 }
 
 window.onclick = function(event) {
     // Bootstrap handles closing on backdrop click
+}
+
+function closeDeviceModal() {
+    if (deviceModal) {
+        deviceModal.hide();
+    }
 }
 
 function checkUrlParams() {
@@ -211,8 +351,16 @@ function checkUrlParams() {
     const product = params.get("product");
     const qr = params.get("qr");
     const maximized = params.get("maximized") === "true";
+    
+    const editMac = params.get("edit");
+    const addMode = params.get("add") === "true";
+
     if (code && product) {
         showQRCode(code, product, qr, true, maximized);
+    } else if (editMac) {
+        openDeviceModal(editMac, true);
+    } else if (addMode) {
+        openDeviceModal(null, true);
     }
 }
 
@@ -220,17 +368,30 @@ window.addEventListener("load", checkUrlParams);
 window.addEventListener("popstate", (event) => {
     if (event.state && event.state.code && event.state.product) {
         showQRCode(event.state.code, event.state.product, event.state.qr, true, event.state.maximized);
+    } else if (event.state && (event.state.edit || event.state.add)) {
+        openDeviceModal(event.state.edit || null, true);
     } else {
         const params = new URLSearchParams(window.location.search);
         const code = params.get("code");
         const product = params.get("product");
         const qr = params.get("qr");
         const maximized = params.get("maximized") === "true";
+        
+        const editMac = params.get("edit");
+        const addMode = params.get("add") === "true";
+
         if (code && product) {
             showQRCode(code, product, qr, true, maximized);
+        } else if (editMac) {
+            openDeviceModal(editMac, true);
+        } else if (addMode) {
+            openDeviceModal(null, true);
         } else {
             if (bootstrapModal) {
                 bootstrapModal.hide();
+            }
+            if (deviceModal) {
+                deviceModal.hide();
             }
         }
     }

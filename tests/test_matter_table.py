@@ -22,7 +22,7 @@ class TestApp(unittest.TestCase):
     def test_matter_table_has_qr_column(self):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<th>QR Code</th>', response.data)
+        self.assertIn(b'data-header="QR"', response.data)
         self.assertIn(b'Show QR', response.data)
 
 if __name__ == '__main__':

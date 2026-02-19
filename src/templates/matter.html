@@ -30,6 +30,9 @@
             <div class="flex-grow-1 search-container">
                 <input id="globalFilter" type="search" class="form-control" placeholder="Filter devices..." aria-label="Filter devices">
             </div>
+            <button class="btn btn-primary" type="button" onclick="openDeviceModal()">
+                <i class="fa-solid fa-plus me-1"></i> Add Device
+            </button>
             <div class="dropdown">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Columns
@@ -56,19 +59,26 @@
                             <i class="fa-solid fa-sort text-muted"></i>
                         </th>
                         {% endfor %}
-                        <th>QR Code</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for row in data %}
-                    <tr>
+                    <tr data-mac="{{ row['MAC'] }}">
                         {% for header in headers %}
-                        <td>{{ row[header] }}</td>
+                        <td data-header="{{ header }}">{{ row[header] }}</td>
                         {% endfor %}
                         <td>
-                            {% if row['Pairing Code'] %}
-                            <button class="btn btn-primary btn-sm" onclick="showQRCode('{{ row['Pairing Code'] }}', '{{ row['Product'] }}', '{{ row['QR'] or '' }}')">Show QR</button>
-                            {% endif %}
+                            <div class="d-flex gap-1">
+                                {% if row['Pairing Code'] %}
+                                <button class="btn btn-primary btn-sm" onclick="showQRCode('{{ row['Pairing Code'] }}', '{{ row['Product'] }}', '{{ row['QR'] or '' }}')" title="Show QR">
+                                    <i class="fa-solid fa-qrcode"></i>
+                                </button>
+                                {% endif %}
+                                <button class="btn btn-secondary btn-sm" onclick="openDeviceModal('{{ row['MAC'] }}')" title="Edit">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -77,7 +87,55 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Device Edit/Add Modal -->
+    <div class="modal fade" id="deviceModal" tabindex="-1" aria-labelledby="deviceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deviceModalLabel">Add New Device</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeDeviceModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="deviceForm">
+                        <input type="hidden" id="originalMac" name="originalMac">
+                        <div class="mb-3">
+                            <label for="product" class="form-label">Product</label>
+                            <input type="text" class="form-control" id="product" name="Product" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Type</label>
+                            <input type="text" class="form-control" id="type" name="Type" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mac" class="form-label">MAC Address</label>
+                            <input type="text" class="form-control" id="mac" name="MAC" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pairingCode" class="form-label">Pairing Code</label>
+                            <input type="text" class="form-control" id="pairingCode" name="Pairing Code">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description" name="Description">
+                        </div>
+                        <div class="mb-3">
+                            <label for="qr" class="form-label">QR Data</label>
+                            <input type="text" class="form-control" id="qr" name="QR">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <div>
+                        <button type="button" id="deleteBtn" class="btn btn-danger" onclick="deleteDevice()" style="display: none;">Delete</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeDeviceModal()">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="saveDevice()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" id="modalDialog">
             <div class="modal-content">
