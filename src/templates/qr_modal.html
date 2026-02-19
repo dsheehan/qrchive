@@ -1,0 +1,30 @@
+<!-- QR Code Modal -->
+<div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" id="modalDialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="me-auto modal-header-spacer"></div>
+                <h5 class="modal-title" id="qrModalLabel">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/matter.svg') }}" alt="Matter" class="matter-logo">
+                        <span class="matter-wordmark">matter</span>
+                    </div>
+                    <div id="productTitle" class="text-center mt-1"></div>
+                </h5>
+                <div class="ms-auto d-flex align-items-center justify-content-end modal-header-spacer">
+                    <button type="button" id="maximizeBtn" class="btn btn-sm btn-outline-secondary me-2" onclick="toggleMaximize()" title="Maximize">
+                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary m-0" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()" title="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body text-center">
+                <div id="qrcode" class="qrcode-container mb-3"></div>
+                <p id="pairingCodeText" class="pairing-code-text mb-1 fw-bold"></p>
+                <p id="matterCodeText" class="matter-code-text mb-0 text-muted small"></p>
+            </div>
+        </div>
+    </div>
+</div>
