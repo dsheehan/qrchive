@@ -18,7 +18,7 @@ RUN mkdir -p /data && chown appuser:appuser /data
 USER appuser
 
 # Copy dependency files first for better caching
-COPY --chown=appuser:appuser pyproject.toml uv.lock ./
+COPY --chown=appuser:appuser pyproject.toml ./
 
 # Install dependencies
 RUN --mount=type=cache,target=/root/.cache/uv \
