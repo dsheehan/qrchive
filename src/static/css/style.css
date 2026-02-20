@@ -1,28 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600&display=swap');
-
 /* Keep some base styles but rely mostly on Halfmoon/Bootstrap */
 
 .matter-logo {
-    height: 24px;
+    height: 32px;
 }
 
 [data-bs-theme="dark"] .matter-logo {
     filter: invert(1) brightness(2);
 }
 
-.matter-wordmark {
-    font-family: 'Outfit', sans-serif;
+.navbar-title {
     font-weight: 600;
-    font-size: 24px;
-    letter-spacing: -0.5px;
-    color: #000;
-    text-transform: lowercase;
     margin-left: 5px;
-    line-height: 1;
-}
-
-[data-bs-theme="dark"] .matter-wordmark {
-    color: #fff;
 }
 
 .qrcode-container {
