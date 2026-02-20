@@ -9,20 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="fa-sharp fa-solid fa-qrcode"></i>
-                <span class="matter-wordmark">QRCodex</span>
-            </a>
-            <div class="ms-auto">
-                <button class="btn btn-secondary border-0" type="button" onclick="toggleTheme()" aria-label="Toggle dark mode">
-                    <i class="fa-solid fa-moon d-block-light-only" title="Switch to Dark Mode"></i>
-                    <i class="fa-solid fa-sun d-block-dark-only" title="Switch to Light Mode"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
+    {% include 'navbar.html' %}
 
     <div class="container my-5">
         <h1 class="mb-4">Matter Devices</h1>
@@ -92,7 +79,6 @@
 
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha256-CDOy6cOibCWEdsRiZuaHf8dSGGJRYuBGC+mjoJimHGw=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/halfmoon@2.0.2/js/halfmoon.min.js"></script>
     <script src="{{ url_for('static', filename='js/matter.js') }}"></script>
 </body>
 </html>
