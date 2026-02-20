@@ -121,6 +121,11 @@ function openDeviceModal(mac = null, skipPushState = false) {
         }
     }
 
+    // Ensure scanner is stopped and hidden when modal opens
+    stopScanner();
+    if (document.getElementById("qr-reader")) document.getElementById("qr-reader").style.display = "none";
+    if (document.getElementById("stopScannerBtn")) document.getElementById("stopScannerBtn").style.display = "none";
+
     if (!skipPushState) {
         const params = new URLSearchParams(window.location.search);
         if (mac) {
@@ -342,6 +347,70 @@ window.onclick = function(event) {
 function closeDeviceModal() {
     if (deviceModal) {
         deviceModal.hide();
+    }
+    stopScanner();
+}
+
+let html5QrCode = null;
+
+window.startScanner = function() {
+    const readerDiv = document.getElementById('qr-reader');
+    const stopBtn = document.getElementById('stopScannerBtn');
+    if (readerDiv) readerDiv.style.display = 'block';
+    if (stopBtn) stopBtn.style.display = 'block';
+
+    if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode("qr-reader");
+    }
+
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    html5QrCode.start({ facingMode: "environment" }, config, (decodedText, decodedResult) => {
+        const qrInput = document.getElementById('qr');
+        if (qrInput) qrInput.value = decodedText;
+        stopScanner();
+    }).catch((err) => {
+        console.error("Error starting QR scanner: ", err);
+        alert("Could not start camera. Please ensure you have given permission.");
+        if (readerDiv) readerDiv.style.display = 'none';
+        if (stopBtn) stopBtn.style.display = 'none';
+    });
+}
+
+window.stopScanner = function() {
+    if (html5QrCode && html5QrCode.isScanning) {
+        html5QrCode.stop().then(() => {
+            const readerDiv = document.getElementById('qr-reader');
+            const stopBtn = document.getElementById('stopScannerBtn');
+            if (readerDiv) readerDiv.style.display = 'none';
+            if (stopBtn) stopBtn.style.display = 'none';
+        }).catch((err) => {
+            console.error("Error stopping QR scanner: ", err);
+        });
+    } else {
+        const readerDiv = document.getElementById('qr-reader');
+        const stopBtn = document.getElementById('stopScannerBtn');
+        if (readerDiv) readerDiv.style.display = 'none';
+        if (stopBtn) stopBtn.style.display = 'none';
+    }
+}
+
+window.handleQRFile = function(input) {
+    if (input.files && input.files[0]) {
+        // Use a temporary scanner for file scan if main one is not initialized or is busy
+        const scanner = html5QrCode || new Html5Qrcode("qr-reader");
+        const imageFile = input.files[0];
+        scanner.scanFile(imageFile, true)
+            .then(decodedText => {
+                const qrInput = document.getElementById('qr');
+                if (qrInput) qrInput.value = decodedText;
+                input.value = ""; // Reset input
+            })
+            .catch(err => {
+                console.error("Error scanning file: ", err);
+                alert("Could not find a QR code in this image.");
+                input.value = ""; // Reset input
+            });
     }
 }
 

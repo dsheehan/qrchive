@@ -30,9 +30,24 @@
                         <input type="text" class="form-control" id="description" name="Description">
                     </div>
                     <div class="mb-3">
-                        <label for="qr" class="form-label">QR Data</label>
+                        <label for="qr" class="form-label d-flex justify-content-between">
+                            QR Data
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-camera"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><button type="button" class="dropdown-item" onclick="startScanner()"><i class="fa-solid fa-video me-1"></i> Use Camera</button></li>
+                                    <li><button type="button" class="dropdown-item" onclick="document.getElementById('qrFileInput').click()"><i class="fa-solid fa-file-image me-1"></i> Upload Image</button></li>
+                                </ul>
+                            </div>
+                        </label>
                         <input type="text" class="form-control" id="qr" name="QR">
+                        <input type="file" id="qrFileInput" accept="image/*" style="display: none;" onchange="handleQRFile(this)">
                     </div>
+                    <!-- QR Reader Container -->
+                    <div id="qr-reader" style="width: 100%; display: none; margin-bottom: 1rem;"></div>
+                    <button type="button" id="stopScannerBtn" class="btn btn-sm btn-danger mb-3" style="display: none;" onclick="stopScanner()">Stop Scanner</button>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
