@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Licenses - QRCodex</title>
+    <link href="https://cdn.jsdelivr.net/npm/halfmoon@2.0.2/css/halfmoon.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container my-5">
+        <h1 class="mb-4">Open Source Licenses</h1>
+        
+        <section class="mb-5">
+            <h2 class="h4 mb-3">Python Dependencies</h2>
+            <div class="card bg-body-tertiary">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Dependency</th>
+                                <th>License</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><a href="https://github.com/pallets/flask" target="_blank">Flask</a></td><td><a href="https://github.com/pallets/flask/blob/main/LICENSE.txt" target="_blank">BSD-3-Clause</a></td></tr>
+                            <tr><td><a href="https://github.com/pallets/werkzeug" target="_blank">Werkzeug</a></td><td><a href="https://github.com/pallets/werkzeug/blob/main/LICENSE.txt" target="_blank">BSD-3-Clause</a></td></tr>
+                            <tr><td><a href="https://github.com/pallets/jinja" target="_blank">Jinja2</a></td><td><a href="https://github.com/pallets/jinja/blob/main/LICENSE.txt" target="_blank">BSD-3-Clause</a></td></tr>
+                            <tr><td><a href="https://github.com/pallets/markupsafe" target="_blank">MarkupSafe</a></td><td><a href="https://github.com/pallets/markupsafe/blob/main/LICENSE.txt" target="_blank">BSD-3-Clause</a></td></tr>
+                            <tr><td><a href="https://github.com/pallets/itsdangerous" target="_blank">Itsdangerous</a></td><td><a href="https://github.com/pallets/itsdangerous/blob/main/LICENSE.txt" target="_blank">BSD-3-Clause</a></td></tr>
+                            <tr><td><a href="https://github.com/pallets/click" target="_blank">Click</a></td><td><a href="https://github.com/pallets/click/blob/main/LICENSE.txt" target="_blank">BSD-3-Clause</a></td></tr>
+                            <tr><td><a href="https://github.com/pallets-eco/blinker" target="_blank">Blinker</a></td><td><a href="https://github.com/pallets-eco/blinker/blob/main/LICENSE.txt" target="_blank">MIT</a></td></tr>
+                            <tr><td><a href="https://github.com/pytest-dev/pytest" target="_blank">Pytest</a></td><td><a href="https://github.com/pytest-dev/pytest/blob/main/LICENSE" target="_blank">MIT</a></td></tr>
+                            <tr><td><a href="https://github.com/pypa/packaging" target="_blank">Packaging</a></td><td><a href="https://github.com/pypa/packaging/blob/main/LICENSE" target="_blank">Apache-2.0 OR BSD-2-Clause</a></td></tr>
+                            <tr><td><a href="https://github.com/pytest-dev/pluggy" target="_blank">Pluggy</a></td><td><a href="https://github.com/pytest-dev/pluggy/blob/main/LICENSE" target="_blank">MIT</a></td></tr>
+                            <tr><td><a href="https://github.com/pygments/pygments" target="_blank">Pygments</a></td><td><a href="https://github.com/pygments/pygments/blob/master/LICENSE" target="_blank">BSD-2-Clause</a></td></tr>
+                            <tr><td><a href="https://github.com/tartley/colorama" target="_blank">Colorama</a></td><td><a href="https://github.com/tartley/colorama/blob/master/LICENSE.txt" target="_blank">BSD-3-Clause</a></td></tr>
+                            <tr><td><a href="https://github.com/pytest-dev/iniconfig" target="_blank">Iniconfig</a></td><td><a href="https://github.com/pytest-dev/iniconfig/blob/main/LICENSE" target="_blank">MIT</a></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="h4 mb-3">JavaScript & CSS Dependencies</h2>
+            <div class="card bg-body-tertiary">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Dependency</th>
+                                <th>License</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><a href="https://github.com/twbs/bootstrap" target="_blank">Bootstrap</a></td><td><a href="https://github.com/twbs/bootstrap/blob/main/LICENSE" target="_blank">MIT</a></td></tr>
+                            <tr><td><a href="https://github.com/halfmoonui/halfmoon" target="_blank">Halfmoon</a></td><td><a href="https://github.com/halfmoonui/halfmoon/blob/main/LICENSE" target="_blank">MIT</a></td></tr>
+                            <tr><td><a href="https://github.com/FortAwesome/Font-Awesome" target="_blank">Font Awesome (Free)</a></td><td><a href="https://github.com/FortAwesome/Font-Awesome/blob/6.x/LICENSE.txt" target="_blank">CC BY 4.0 (Icons), SIL OFL 1.1 (Fonts), MIT (Code)</a></td></tr>
+                            <tr><td><a href="https://github.com/mebjas/html5-qrcode" target="_blank">html5-qrcode</a></td><td><a href="https://github.com/mebjas/html5-qrcode/blob/master/LICENSE" target="_blank">Apache-2.0</a></td></tr>
+                            <tr><td><a href="https://github.com/kozakdenys/qr-code-styling" target="_blank">qr-code-styling</a></td><td><a href="https://github.com/kozakdenys/qr-code-styling/blob/master/LICENSE" target="_blank">MIT</a></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <div class="mt-4">
+            <a href="/" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha256-CDOy6cOibCWEdsRiZuaHf8dSGGJRYuBGC+mjoJimHGw=" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/matter.js') }}"></script>
+</body>
+</html>

@@ -22,6 +22,13 @@ class FlaskTestCase(unittest.TestCase):
         response = self.app.get('/qrcode')
         self.assertEqual(response.status_code, 200)
 
+    def test_licenses_route(self):
+        response = self.app.get('/licenses')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Open Source Licenses', response.data)
+        self.assertIn(b'Flask', response.data)
+        self.assertIn(b'Bootstrap', response.data)
+
     def test_matter_route(self):
         response = self.app.get('/matter')
         self.assertEqual(response.status_code, 200)

@@ -28,6 +28,11 @@ def qrcode():
     return render_template('qrcode.html')
 
 
+@app.route('/licenses')
+def licenses():
+    return render_template('licenses.html')
+
+
 @app.route('/matter', methods=['GET'])
 def get_matter():
     repo = get_repo()
