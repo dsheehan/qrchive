@@ -37,7 +37,7 @@
                 <ul class="dropdown-menu p-2 columns-dropdown-menu">
                     {% for header in headers %}
                     <li class="form-check px-2">
-                        <input class="form-check-input column-toggle" type="checkbox" value="{{ loop.index0 }}" id="col-toggle-{{ loop.index0 }}" checked>
+                        <input class="form-check-input column-toggle" type="checkbox" value="{{ loop.index0 }}" id="col-toggle-{{ loop.index0 }}" {% if header != 'QR' %}checked{% endif %}>
                         <label class="form-check-label" for="col-toggle-{{ loop.index0 }}">{{ header }}</label>
                     </li>
                     {% endfor %}
