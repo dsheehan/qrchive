@@ -80,3 +80,24 @@ class MatterRepository:
             
         self._write_csv(new_data, headers)
         return True
+
+    def bulk_add(self, new_records):
+        data, headers = self._read_csv()
+        existing_macs = {row.get('MAC') for row in data if row.get('MAC')}
+        
+        added_count = 0
+        for record in new_records:
+            mac = record.get('MAC')
+            if mac and mac not in existing_macs:
+                data.append(record)
+                existing_macs.add(mac)
+                added_count += 1
+            elif not mac:
+                # If no MAC, we just append it? 
+                # The issue says "de-duplicated", usually MAC is the unique ID here.
+                # If there's no MAC, we can't easily de-duplicate, but maybe we should allow it.
+                data.append(record)
+                added_count += 1
+        
+        self._write_csv(data, headers)
+        return added_count

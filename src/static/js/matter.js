@@ -351,6 +351,34 @@ function closeDeviceModal() {
     stopScanner();
 }
 
+async function importCSV(input) {
+    if (input.files && input.files[0]) {
+        const formData = new FormData();
+        formData.append('file', input.files[0]);
+
+        try {
+            const response = await fetch('/matter/import', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                alert(`Imported successfully. ${result.added_count} new records added.`);
+                window.location.reload();
+            } else {
+                const error = await response.json();
+                alert("Error during import: " + (error.error || "Unknown error"));
+            }
+        } catch (err) {
+            console.error("Import error:", err);
+            alert("An error occurred while importing.");
+        } finally {
+            input.value = ''; // Reset file input
+        }
+    }
+}
+
 let html5QrCode = null;
 
 window.startScanner = function() {

@@ -22,6 +22,16 @@
             </button>
             <div class="dropdown">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-file-csv me-1"></i> CSV
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/matter/export"><i class="fa-solid fa-download me-1"></i> Export</a></li>
+                    <li><button class="dropdown-item" onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-upload me-1"></i> Import</button></li>
+                </ul>
+                <input type="file" id="importFile" accept=".csv" style="display: none;" onchange="importCSV(this)">
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Columns
                 </button>
                 <ul class="dropdown-menu p-2 columns-dropdown-menu">

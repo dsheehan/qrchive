@@ -1,6 +1,7 @@
 import os
 import csv
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_file
+import io
 from repositories import MatterRepository
 
 app = Flask(__name__)
@@ -72,6 +73,27 @@ def delete_matter(mac):
         return jsonify({"success": True}), 200
     else:
         return jsonify({"error": "Device not found"}), 404
+
+
+@app.route('/matter/export', methods=['GET'])
+def export_matter():
+    return send_file(get_data_path(), as_attachment=True, download_name='matter.csv', mimetype='text/csv')
+
+
+@app.route('/matter/import', methods=['POST'])
+def import_matter():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+    if file:
+        stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+        csv_input = csv.DictReader(stream)
+        new_records = [row for row in csv_input]
+        repo = get_repo()
+        added_count = repo.bulk_add(new_records)
+        return jsonify({"success": True, "added_count": added_count}), 200
 
 
 if __name__ == '__main__':
