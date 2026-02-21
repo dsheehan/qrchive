@@ -5,7 +5,7 @@ import os
 # Add src to the search path for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from app import app
+from app import app, VERSION
 
 class FlaskTestCase(unittest.TestCase):
     def setUp(self):
@@ -18,7 +18,8 @@ class FlaskTestCase(unittest.TestCase):
         self.assertIn(b'Matter Devices', response.data)
         self.assertIn(b'<table', response.data)
         # Check if version is present in navbar
-        self.assertIn(b'v0.1.0', response.data)
+        expected_version = f'v{VERSION}'.encode()
+        self.assertIn(expected_version, response.data)
 
     def test_qrcode_route(self):
         response = self.app.get('/qrcode')
@@ -40,6 +41,15 @@ class FlaskTestCase(unittest.TestCase):
         self.assertIsInstance(data, list)
         self.assertGreater(len(data), 0)
         self.assertEqual(data[0]['Product'], 'Tapo S505D')
+
+    def test_health_route(self):
+        response = self.app.get('/health')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content_type, 'application/json')
+        
+        data = response.get_json()
+        self.assertEqual(data['status'], 'healthy')
+        self.assertEqual(data['version'], VERSION)
 
 if __name__ == '__main__':
     unittest.main()

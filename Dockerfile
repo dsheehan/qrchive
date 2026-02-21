@@ -38,6 +38,10 @@ USER appuser
 # Expose the port the app runs on
 EXPOSE 5000
 
+# Health check using the new /health endpoint
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:5000/health || exit 1
+
 # Set environment variables for Flask and data path
 ENV FLASK_APP=src/app.py
 ENV FLASK_RUN_HOST=0.0.0.0
