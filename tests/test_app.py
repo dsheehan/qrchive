@@ -17,6 +17,8 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Matter Devices', response.data)
         self.assertIn(b'<table', response.data)
+        # Check if version is present in navbar
+        self.assertIn(b'v0.1.0', response.data)
 
     def test_qrcode_route(self):
         response = self.app.get('/qrcode')

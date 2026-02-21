@@ -3,8 +3,20 @@ import csv
 from flask import Flask, render_template, jsonify, request, send_file
 import io
 from repositories import MatterRepository
+import tomllib
 
 app = Flask(__name__)
+
+def get_version():
+    with open("pyproject.toml", "rb") as f:
+        data = tomllib.load(f)
+    return data["project"]["version"]
+
+VERSION = get_version()
+
+@app.context_processor
+def inject_version():
+    return dict(version=VERSION)
 
 # Ensure the app knows where to find the CSV file
 # Use an environment variable for flexibility (especially for Docker mounts)
