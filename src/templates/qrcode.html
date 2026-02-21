@@ -9,8 +9,8 @@
 <body class="qr-generator-body">
 
     <h2>QR Code Generator (Client-Side)</h2>
-    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-        <img src="{{ url_for('static', filename='img/Logo_of_Matter_connectivity_standard.svg') }}" alt="Matter" style="height: 32px;">
+    <div class="qr-generator-logo-container">
+        <img src="{{ url_for('static', filename='img/Logo_of_Matter_connectivity_standard.svg') }}" alt="Matter" class="matter-logo">
     </div>
     <input type="text" id="text" placeholder="Enter text or URL">
     <button onclick="generateQRCode()">Generate</button>

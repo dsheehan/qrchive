@@ -43,8 +43,38 @@
     margin-top: 50px;
 }
 
+.qr-generator-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
 input {
     padding: 8px;
     width: 250px;
     font-size: 16px;
+}
+
+/* Navbar version and indicators */
+.navbar-version {
+    font-size: 0.6em;
+}
+
+.update-indicator-btn {
+    width: 2rem;
+    height: 2rem;
+}
+
+/* Modal and QR scanner styles */
+.qr-reader-container {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.markdown-content {
+    max-height: 400px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-family: var(--bs-font-sans-serif);
 }

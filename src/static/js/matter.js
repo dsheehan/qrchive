@@ -380,6 +380,49 @@ async function importCSV(input) {
 }
 
 let html5QrCode = null;
+let latestRelease = null;
+
+async function checkUpdates() {
+    try {
+        const response = await fetch('/api/latest-release');
+        if (response.ok) {
+            latestRelease = await response.json();
+            
+            if (latestRelease.is_newer) {
+                const indicator = document.getElementById('updateIndicator');
+                if (indicator) indicator.style.display = 'block';
+            }
+        }
+    } catch (err) {
+        console.error("Failed to check for updates:", err);
+    }
+}
+
+async function showWhatsNew() {
+    const modalEl = document.getElementById('whatsNewModal');
+    const modal = new bootstrap.Modal(modalEl);
+    
+    if (!latestRelease) {
+        try {
+            const response = await fetch('/api/latest-release');
+            if (response.ok) {
+                latestRelease = await response.json();
+            }
+        } catch (err) {
+            console.error("Failed to fetch release notes:", err);
+        }
+    }
+
+    if (latestRelease) {
+        document.getElementById('whatsNewVersion').innerText = `Version ${latestRelease.latest_version}`;
+        document.getElementById('whatsNewContent').innerText = latestRelease.release_notes || "No release notes provided.";
+        document.getElementById('viewOnGithub').href = latestRelease.html_url;
+    } else {
+        document.getElementById('whatsNewContent').innerText = "Could not fetch release notes from GitHub.";
+    }
+    
+    modal.show();
+}
 
 window.startScanner = function() {
     const readerDiv = document.getElementById('qr-reader');
@@ -629,6 +672,7 @@ window.addEventListener("popstate", (event) => {
         bindSorting();
         bindColumnToggles();
         bindFilter();
+        checkUpdates();
     }
     if (document.readyState === 'loading'){
         document.addEventListener('DOMContentLoaded', init);
