@@ -179,7 +179,7 @@ async function saveDevice() {
 
         if (response.ok) {
             deviceModal.hide();
-            window.location.reload(); // Simple way to refresh the table
+            window.location.href = "/"; // Navigate to root after save
         } else {
             const error = await response.json();
             alert("Error: " + (error.error || "Failed to save device"));
@@ -205,7 +205,7 @@ async function deleteDevice() {
 
         if (response.ok) {
             deviceModal.hide();
-            window.location.reload();
+            window.location.href = "/"; // Navigate to root after delete
         } else {
             const error = await response.json();
             alert("Error: " + (error.error || "Failed to delete device"));
