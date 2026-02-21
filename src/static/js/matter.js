@@ -382,16 +382,49 @@ async function importCSV(input) {
 let html5QrCode = null;
 let latestRelease = null;
 
+function isNewerVersion(latest, current) {
+    try {
+        const l = latest.replace(/^v/, '').split('.').map(Number);
+        const c = current.replace(/^v/, '').split('.').map(Number);
+        for (let i = 0; i < Math.max(l.length, c.length); i++) {
+            const lv = l[i] || 0;
+            const cv = c[i] || 0;
+            if (lv > cv) return true;
+            if (lv < cv) return false;
+        }
+        return false;
+    } catch (err) {
+        return false;
+    }
+}
+
+async function fetchLatestRelease() {
+    if (!window.APP_CONFIG || !window.APP_CONFIG.githubRepo) return null;
+    try {
+        const response = await fetch(`https://api.github.com/repos/${window.APP_CONFIG.githubRepo}/releases/latest`);
+        if (response.ok) {
+            const data = await response.json();
+            const latestTag = data.tag_name || "0.0.0";
+            return {
+                current_version: window.APP_CONFIG.version,
+                latest_version: latestTag,
+                is_newer: isNewerVersion(latestTag, window.APP_CONFIG.version),
+                release_notes: data.body,
+                html_url: data.html_url
+            };
+        }
+    } catch (err) {
+        console.error("Failed to fetch release info from GitHub:", err);
+    }
+    return null;
+}
+
 async function checkUpdates() {
     try {
-        const response = await fetch('/api/latest-release');
-        if (response.ok) {
-            latestRelease = await response.json();
-            
-            if (latestRelease.is_newer) {
-                const indicator = document.getElementById('updateIndicator');
-                if (indicator) indicator.style.display = 'block';
-            }
+        latestRelease = await fetchLatestRelease();
+        if (latestRelease && latestRelease.is_newer) {
+            const indicator = document.getElementById('updateIndicator');
+            if (indicator) indicator.style.display = 'block';
         }
     } catch (err) {
         console.error("Failed to check for updates:", err);
@@ -403,14 +436,7 @@ async function showWhatsNew() {
     const modal = new bootstrap.Modal(modalEl);
     
     if (!latestRelease) {
-        try {
-            const response = await fetch('/api/latest-release');
-            if (response.ok) {
-                latestRelease = await response.json();
-            }
-        } catch (err) {
-            console.error("Failed to fetch release notes:", err);
-        }
+        latestRelease = await fetchLatestRelease();
     }
 
     if (latestRelease) {

@@ -51,20 +51,5 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(data['status'], 'healthy')
         self.assertEqual(data['version'], VERSION)
 
-    def test_latest_release_route(self):
-        # We don't want to actually hit GitHub API in tests
-        # This will test the route exists and handles failure gracefully if not mocked
-        response = self.app.get('/api/latest-release')
-        # It might be 200 (if GITHUB_REPO exists and public) or 404/500 otherwise.
-        self.assertIn(response.status_code, [200, 403, 404, 500])
-        
-        if response.status_code == 200:
-            data = response.get_json()
-            self.assertIn('current_version', data)
-            self.assertIn('latest_version', data)
-            self.assertIn('is_newer', data)
-            self.assertIn('release_notes', data)
-            self.assertEqual(data['current_version'], VERSION)
-
 if __name__ == '__main__':
     unittest.main()

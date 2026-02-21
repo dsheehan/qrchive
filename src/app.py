@@ -4,7 +4,6 @@ from flask import Flask, render_template, jsonify, request, send_file
 import io
 from repositories import MatterRepository
 import tomllib
-import requests
 
 app = Flask(__name__)
 
@@ -28,7 +27,7 @@ GITHUB_REPO = get_github_repo()
 
 @app.context_processor
 def inject_metadata():
-    return dict(version=VERSION, github_url=GITHUB_URL)
+    return dict(version=VERSION, github_url=GITHUB_URL, github_repo=GITHUB_REPO)
 
 # Ensure the app knows where to find the CSV file
 # Use an environment variable for flexibility (especially for Docker mounts)
@@ -46,40 +45,6 @@ def index():
     if not headers:
         return "File not found or empty", 404
     return render_template('matter.html', data=data, headers=headers)
-
-
-def is_newer_version(latest, current):
-    try:
-        l = [int(x) for x in latest.lstrip('v').split('.')]
-        c = [int(x) for x in current.lstrip('v').split('.')]
-        for i in range(max(len(l), len(c))):
-            lv = l[i] if i < len(l) else 0
-            cv = c[i] if i < len(c) else 0
-            if lv > cv:
-                return True
-            if lv < cv:
-                return False
-        return False
-    except Exception:
-        return False
-
-@app.route('/api/latest-release')
-def get_latest_release():
-    try:
-        response = requests.get(f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest", timeout=5)
-        if response.status_code == 200:
-            data = response.json()
-            latest_tag = data.get("tag_name", "0.0.0")
-            return jsonify({
-                "current_version": VERSION,
-                "latest_version": latest_tag,
-                "is_newer": is_newer_version(latest_tag, VERSION),
-                "release_notes": data.get("body"),
-                "html_url": data.get("html_url")
-            })
-        return jsonify({"error": "Failed to fetch release info"}), response.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 
 @app.route('/qrcode')
