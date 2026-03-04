@@ -6,6 +6,8 @@
 [![Flask](https://img.shields.io/badge/flask-3.1.2-green.svg)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
+[![GitHub Release](https://img.shields.io/github/v/release/dsheehan/qrcodex_dev)](https://github.com/dsheehan/qrcodex_dev/releases)
+[![Docker Image CI](https://github.com/dsheehan/qrcodex_dev/actions/workflows/docker-image.yml/badge.svg)](https://github.com/dsheehan/qrcodex_dev/actions/workflows/docker-image.yml)
 
 **The ultimate open-source dashboard for managing Matter devices and their QR codes.**
 
