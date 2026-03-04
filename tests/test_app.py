@@ -1,55 +1,40 @@
-import unittest
-import sys
-import os
+from app import VERSION
 
-# Add src to the search path for imports
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
+def test_index_route(client):
+    response = client.get('/')
+    assert response.status_code == 200
+    assert b'Matter Devices' in response.data
+    assert b'<table' in response.data
+    # Check if version is present in navbar
+    expected_version = f'v{VERSION}'.encode()
+    assert expected_version in response.data
 
-from app import app, VERSION
+def test_qrcode_route(client):
+    response = client.get('/qrcode')
+    assert response.status_code == 200
 
-class FlaskTestCase(unittest.TestCase):
-    def setUp(self):
-        self.app = app.test_client()
-        self.app.testing = True
+def test_licenses_route(client):
+    response = client.get('/licenses')
+    assert response.status_code == 200
+    assert b'Open Source Licenses' in response.data
+    assert b'flask' in response.data.lower()
+    assert b'bootstrap' in response.data.lower()
 
-    def test_index_route(self):
-        response = self.app.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Matter Devices', response.data)
-        self.assertIn(b'<table', response.data)
-        # Check if version is present in navbar
-        expected_version = f'v{VERSION}'.encode()
-        self.assertIn(expected_version, response.data)
+def test_matter_route(client):
+    response = client.get('/matter')
+    assert response.status_code == 200
+    assert response.content_type == 'application/json'
+    
+    data = response.get_json()
+    assert isinstance(data, list)
+    assert len(data) > 0
+    assert data[0]['Product'] == 'Tapo S505D'
 
-    def test_qrcode_route(self):
-        response = self.app.get('/qrcode')
-        self.assertEqual(response.status_code, 200)
-
-    def test_licenses_route(self):
-        response = self.app.get('/licenses')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Open Source Licenses', response.data)
-        self.assertIn(b'Flask', response.data)
-        self.assertIn(b'Bootstrap', response.data)
-
-    def test_matter_route(self):
-        response = self.app.get('/matter')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content_type, 'application/json')
-        
-        data = response.get_json()
-        self.assertIsInstance(data, list)
-        self.assertGreater(len(data), 0)
-        self.assertEqual(data[0]['Product'], 'Tapo S505D')
-
-    def test_health_route(self):
-        response = self.app.get('/health')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content_type, 'application/json')
-        
-        data = response.get_json()
-        self.assertEqual(data['status'], 'healthy')
-        self.assertEqual(data['version'], VERSION)
-
-if __name__ == '__main__':
-    unittest.main()
+def test_health_route(client):
+    response = client.get('/health')
+    assert response.status_code == 200
+    assert response.content_type == 'application/json'
+    
+    data = response.get_json()
+    assert data['status'] == 'healthy'
+    assert data['version'] == VERSION
