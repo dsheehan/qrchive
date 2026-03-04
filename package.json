@@ -1,6 +1,6 @@
 {
   "name": "qrchive",
-  "version": "0.3.4",
+  "version": "0.5.0",
   "description": "QR code management",
   "private": true,
   "dependencies": {
