@@ -22,7 +22,8 @@ jobs:
         run: |
           VERSION=${GITHUB_REF_NAME#v}
           python -c "
-          import sys, re
+          import sys, re, os
+          VERSION = os.environ.get('VERSION', '')
           with open('CHANGELOG.md', 'r', encoding='utf-8') as f:
               content = f.read()
           pattern = rf'## \[{re.escape(VERSION)}\] - \d{{4}}-\d{{2}}-\d{{2}}\n(.*?)(?=\n## \[|\Z)'
