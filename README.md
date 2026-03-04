@@ -1,13 +1,13 @@
 <div align="center">
 
-# ⚡ QRCodex
+# ⚡ QRchive
 
 [![Python Version](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/flask-3.1.2-green.svg)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
-[![GitHub Release](https://img.shields.io/github/v/release/dsheehan/qrcodex_dev)](https://github.com/dsheehan/qrcodex_dev/releases)
-[![Docker Image CI](https://github.com/dsheehan/qrcodex_dev/actions/workflows/docker-image.yml/badge.svg)](https://github.com/dsheehan/qrcodex_dev/actions/workflows/docker-image.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/dsheehan/qrchive)](https://github.com/dsheehan/qrchive/releases)
+[![Docker Image CI](https://github.com/dsheehan/qrchive/actions/workflows/docker-image.yml/badge.svg)](https://github.com/dsheehan/qrchive/actions/workflows/docker-image.yml)
 
 **The ultimate open-source dashboard for managing Matter devices and their QR codes.**
 
@@ -19,7 +19,7 @@
 
 ### 🚀 Overview
 
-**QRCodex** is a sleek, modern, and lightweight web application designed to help you manage your Matter connectivity devices. Whether you're tracking MAC addresses, pairing codes, or generating/scanning QR data, QRCodex provides a clean interface to keep your smart home hardware organized.
+**QRchive** is a sleek, modern, and lightweight web application designed to help you manage your Matter connectivity devices. Whether you're tracking MAC addresses, pairing codes, or generating/scanning QR data, QRchive provides a clean interface to keep your smart home hardware organized.
 
 ### ✨ Features
 
@@ -45,8 +45,8 @@
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/dsheehan/qrcodex_dev.git
-   cd qrcodex
+   git clone https://github.com/dsheehan/qrchive.git
+   cd qrchive
    ```
 
 2. **Install dependencies and run:**
@@ -59,11 +59,11 @@
 
 #### Using Docker
 
-Deploy QRCodex in seconds using Docker:
+Deploy QRchive in seconds using Docker:
 
 ```bash
-docker build -t qrcodex .
-docker run -p 5000:5000 -v qrcodex-data:/data qrcodex
+docker build -t qrchive .
+docker run -p 5000:5000 -v qrchive-data:/data qrchive
 ```
 
 ---
@@ -85,7 +85,7 @@ docker run -p 5000:5000 -v qrcodex-data:/data qrcodex
 
 ### 🤝 Contributing
 
-Contributions are welcome! Feel free to open issues or submit pull requests to help improve QRCodex.
+Contributions are welcome! Feel free to open issues or submit pull requests to help improve QRchive.
 
 ### 📜 License
 

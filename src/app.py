@@ -17,12 +17,12 @@ def get_project_metadata():
 
 metadata = get_project_metadata()
 VERSION = metadata.get("project", {}).get("version", "0.0.0")
-GITHUB_URL = metadata.get("project", {}).get("urls", {}).get("Repository", "https://github.com/dsheehan/qrcodex_dev")
+GITHUB_URL = metadata.get("project", {}).get("urls", {}).get("Repository", "https://github.com/dsheehan/qrchive")
 
 def get_github_repo():
     if "github.com/" in GITHUB_URL:
         return GITHUB_URL.split("github.com/")[1].strip("/")
-    return "dsheehan/qrcodex_dev" # Fallback
+    return "dsheehan/qrchive" # Fallback
 
 GITHUB_REPO = get_github_repo()
 

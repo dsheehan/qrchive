@@ -1,6 +1,6 @@
 ### Increase Project Version Prompt
 
-**Role**: You are a release manager assistant for the `qrcodex` project.
+**Role**: You are a release manager assistant for the `QRchive` project.
 
 **Task**: Increase the project version number in all relevant files to prepare for a new release.
 
