@@ -19,18 +19,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block head %}{% endblock %}
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}{% endblock %}" data-version="{{ version }}" data-github-repo="{{ github_repo }}">
     {% include 'navbar.html' %}
 
     {% block content %}{% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha256-CDOy6cOibCWEdsRiZuaHf8dSGGJRYuBGC+mjoJimHGw=" crossorigin="anonymous"></script>
-    <script>
-        window.APP_CONFIG = {
-            version: "{{ version }}",
-            githubRepo: "{{ github_repo }}"
-        };
-    </script>
     <script src="{{ url_for('static', filename='js/matter.js') }}"></script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>

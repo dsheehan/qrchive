@@ -20,6 +20,12 @@
     }
     // Apply on load
     setTheme(getPreferredTheme());
+
+    // Initialize APP_CONFIG from body data attributes
+    window.APP_CONFIG = {
+        version: html.getAttribute('data-version') || '0.0.0',
+        githubRepo: html.getAttribute('data-github-repo') || ''
+    };
     // Keep in sync with OS changes when no explicit preference stored
     if (!localStorage.getItem(storageKey) && window.matchMedia) {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
