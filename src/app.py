@@ -4,6 +4,7 @@ from flask import Flask, render_template, jsonify, request, send_file
 import io
 from repositories import MatterRepository
 import tomllib
+from licenses import get_licenses_data
 
 app = Flask(__name__)
 
@@ -54,7 +55,8 @@ def qrcode():
 
 @app.route('/licenses')
 def licenses():
-    return render_template('licenses.html')
+    all_licenses = get_licenses_data()
+    return render_template('licenses.html', licenses=all_licenses)
 
 
 @app.route('/matter', methods=['GET'])

@@ -21,7 +21,7 @@ RUN mkdir -p /data && chown appuser:appuser /data
 USER appuser
 
 # Copy dependency files first for better caching
-COPY --chown=appuser:appuser pyproject.toml ./
+COPY --chown=appuser:appuser pyproject.toml package.json ./
 
 # Install dependencies
 RUN --mount=type=cache,target=/home/appuser/.cache/uv,uid=1000,gid=1000 \

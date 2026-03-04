@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Python",
+    "version": "3.14.2",
+    "url": "https://www.python.org/",
+    "license": "PSF",
+    "license_url": "https://docs.python.org/3/license.html",
+    "type": "System"
+  },
+  {
+    "name": "uv",
+    "version": "0.9.29",
+    "url": "https://github.com/astral-sh/uv",
+    "license": "Apache-2.0 or MIT",
+    "license_url": "https://github.com/astral-sh/uv/blob/main/LICENSE-MIT",
+    "type": "System"
+  },
+  {
+    "name": "Docker",
+    "url": "https://www.docker.com/",
+    "license": "Apache-2.0",
+    "license_url": "https://github.com/moby/moby/blob/master/LICENSE",
+    "type": "System"
+  },
+  {
+    "name": "Debian Trixie (Slim)",
+    "url": "https://www.debian.org/",
+    "license": "GPL and other licenses",
+    "license_url": "https://www.debian.org/legal/licenses/",
+    "type": "System"
+  }
+]

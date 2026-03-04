@@ -1,0 +1,13 @@
+{
+  "name": "qrcodex",
+  "version": "0.2.0",
+  "description": "Smart Home Matter QR Code Manager",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "halfmoon": "^2.0.2",
+    "@fortawesome/fontawesome-free": "^6.7.2",
+    "html5-qrcode": "^2.3.8",
+    "qr-code-styling": "^1.6.0-rc.1"
+  }
+}
