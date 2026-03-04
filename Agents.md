@@ -20,9 +20,9 @@
    - Verify that all modified files contain the correct new version.
    - Run existing tests to ensure no regressions were introduced by version changes (especially if the version is used in the app, e.g., in `src/app.py`).
 6. **Git Tagging**:
-   - Commit the changes if they are not already committed (e.g., `git commit -m "Bump version to X.Y.Z"`).
+   - Commit the changes if they are not already committed (e.g., `git commit -m "Bump version to X.Y.Z"`). DO NOT use the `--trailer` flag in the commit message.
    - Create a git tag for the new version (e.g., `git tag vX.Y.Z`).
-   - Push the tag to the remote repository (e.g., `git push origin vX.Y.Z`).
+   - Push the tag to the remote repository (e.g., `git push upstream vX.Y.Z`).
 
 **Success Criteria**:
 - `pyproject.toml` and `package.json` have the same, incremented version number.

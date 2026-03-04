@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Increase project version in all relevant files.
+- Updated release.yml to use CHANGELOG.md
 
 ## [0.3.1] - 2026-03-04
 
