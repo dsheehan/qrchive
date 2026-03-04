@@ -1,7 +1,7 @@
 {
   "name": "qrcodex",
-  "version": "0.2.0",
-  "description": "Smart Home Matter QR Code Manager",
+  "version": "0.3.0",
+  "description": "QR code management",
   "private": true,
   "dependencies": {
     "bootstrap": "^5.3.3",
