@@ -1,6 +1,6 @@
 import os
-import csv
-from flask import Flask, render_template, jsonify, request, send_file
+from flask import Flask, render_template, jsonify, request, send_file, Response
+from services import import_from_csv, export_to_csv
 import io
 from repositories import MatterRepository
 import tomllib
@@ -98,7 +98,14 @@ def delete_matter(mac):
 
 @app.route('/matter/export', methods=['GET'])
 def export_matter():
-    return send_file(get_data_path(), as_attachment=True, download_name='matter.csv', mimetype='text/csv')
+    repo = get_repo()
+    data, headers = repo.get_all()
+    csv_content = export_to_csv(data, headers)
+    return Response(
+        csv_content,
+        mimetype="text/csv",
+        headers={"Content-disposition": "attachment; filename=matter.csv"}
+    )
 
 
 @app.route('/matter/import', methods=['POST'])
@@ -109,9 +116,7 @@ def import_matter():
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
     if file:
-        stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
-        csv_input = csv.DictReader(stream)
-        new_records = [row for row in csv_input]
+        new_records = import_from_csv(file.stream)
         repo = get_repo()
         added_count = repo.bulk_add(new_records)
         return jsonify({"success": True, "added_count": added_count}), 200

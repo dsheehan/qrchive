@@ -1,29 +1,14 @@
-import csv
-import os
+from services import read_csv_file, write_csv_file
 
 class MatterRepository:
     def __init__(self, data_path):
         self.data_path = data_path
 
     def _read_csv(self):
-        data = []
-        headers = []
-        try:
-            with open(self.data_path, mode='r', encoding='utf-8') as f:
-                reader = csv.DictReader(f)
-                headers = reader.fieldnames
-                for row in reader:
-                    data.append(row)
-        except FileNotFoundError:
-            pass
-        return data, headers
+        return read_csv_file(self.data_path)
 
     def _write_csv(self, data, headers):
-        os.makedirs(os.path.dirname(self.data_path), exist_ok=True)
-        with open(self.data_path, mode='w', encoding='utf-8', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=headers)
-            writer.writeheader()
-            writer.writerows(data)
+        write_csv_file(self.data_path, data, headers)
 
     def get_all(self):
         data, headers = self._read_csv()
