@@ -9,10 +9,6 @@ def test_index_route(client):
     expected_version = f'v{VERSION}'.encode()
     assert expected_version in response.data
 
-def test_qrcode_route(client):
-    response = client.get('/qrcode')
-    assert response.status_code == 200
-
 def test_licenses_route(client):
     response = client.get('/licenses')
     assert response.status_code == 200

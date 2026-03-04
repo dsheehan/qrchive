@@ -48,10 +48,6 @@ def index():
     return render_template('matter.html', data=data, headers=headers)
 
 
-@app.route('/qrcode')
-def qrcode():
-    return render_template('qrcode.html')
-
 
 @app.route('/licenses')
 def licenses():
