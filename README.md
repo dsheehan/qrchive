@@ -11,7 +11,7 @@
 
 **The ultimate open-source dashboard for managing Matter devices and their QR codes.**
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Docker](#-docker-deployment) • [Tech Stack](#-tech-stack)
+[Features](#-features) • [Quick Start](#-quick-start-recommended) • [Docker](#-quick-start-recommended) • [Tech Stack](#-tech-stack)
 
 </div>
 
@@ -39,53 +39,48 @@
 
 ---
 
-### 🏁 Quick Start
+### 🚀 Quick Start (Recommended)
 
-#### Using `uv` (Recommended)
+Deploy QRchive in seconds using Docker.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/dsheehan/qrchive.git
-   cd qrchive
-   ```
+#### 🐳 Docker Compose
 
-2. **Install dependencies and run:**
-   ```bash
-   uv run flask run
-   ```
+Create a `docker-compose.yml` file:
 
-3. **Access the dashboard:**
-   Open `http://localhost:5000` in your browser.
+```yaml
+version: '3.8'
+services:
+  qrchive:
+    image: ghcr.io/dsheehan/qrchive:latest
+    container_name: qrchive
+    ports:
+      - "5000:5000"
+    volumes:
+      - /path/to/qrchive/data:/data
+    restart: unless-stopped
 
-#### Using Docker
+volumes:
+  qrchive-data:
+```
 
-Deploy QRchive in seconds using Docker:
+Run with: `docker-compose up -d`
+
+#### 🛠 Docker CLI
 
 ```bash
-docker build -t qrchive .
-docker run -p 5000:5000 -v qrchive-data:/data qrchive
+docker pull ghcr.io/dsheehan/qrchive:latest
+docker run -d \
+  -p 5000:5000 \
+  -v /path/to/qrchive/data:/data \
+  --name qrchive \
+  ghcr.io/dsheehan/qrchive:latest
 ```
 
 ---
 
-### 📁 Project Structure
+### 🛠 Development
 
-```text
-├── src/
-│   ├── app.py           # Flask application core
-│   ├── repositories.py  # Data persistence logic
-│   ├── static/          # Styles, scripts, and images
-│   └── templates/       # Jinja2 HTML templates
-├── data/                # Default CSV storage
-├── tests/               # Pytest suite
-└── Dockerfile           # Container definition
-```
-
----
-
-### 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests to help improve QRchive.
+Interested in contributing or building from source? See our [Development Guide](DEVELOPMENT.md).
 
 ### 📜 License
 
