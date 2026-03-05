@@ -30,7 +30,7 @@ This file contains pre-defined prompts for AI agents (like GitHub Copilot, ChatG
 6. **Git Tagging**:
    - Commit the changes if they are not already committed (e.g., `git commit -m "Bump version to X.Y.Z"`). DO NOT use the `--trailer` flag in the commit message.
    - Create a git tag for the new version (e.g., `git tag vX.Y.Z`).
-   - Push the tag to the remote repository (e.g., `git push origin vX.Y.Z`).
+   - Push the tag and the current branch to the remote repository (e.g., `git push origin vX.Y.Z` and `git push origin main`).
 
 **Success Criteria**:
 - `pyproject.toml` and `package.json` have the same, incremented version number.
