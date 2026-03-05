@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Expanded "Project Structure" in `DEVELOPMENT.md` to include key files (e.g., `scripts/`, `Agents.md`, `services.py`, `licenses.py`, `.github/workflows/`).
 - Added "Maintenance & Releases" section to `DEVELOPMENT.md` explaining the use of AI agent prompts.
 - Added header and purpose description to `Agents.md`.
 

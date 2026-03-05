@@ -34,14 +34,24 @@ docker run -p 5000:5000 -v qrchive-data:/data qrchive
 ### 📁 Project Structure
 
 ```text
-├── src/
-│   ├── app.py           # Flask application core
+├── .github/workflows/   # CI/CD pipelines (Docker builds, releases)
+├── data/                # Default CSV storage for Matter devices
+├── scripts/             # Maintenance scripts (e.g., release notes extraction)
+├── src/                 # Application source code
+│   ├── data/            # Internal data files (e.g., licenses)
+│   ├── static/          # Frontend assets (CSS, JS, images)
+│   ├── templates/       # Jinja2 HTML templates
+│   ├── app.py           # Flask application entry point
 │   ├── repositories.py  # Data persistence logic
-│   ├── static/          # Styles, scripts, and images
-│   └── templates/       # Jinja2 HTML templates
-├── data/                # Default CSV storage
+│   ├── services.py      # Business logic and CSV handling
+│   └── licenses.py      # License information processing
 ├── tests/               # Pytest suite
-└── Dockerfile           # Container definition
+├── Agents.md            # AI agent prompts for maintenance
+├── CHANGELOG.md         # Project history and version tracking
+├── DEVELOPMENT.md       # This guide
+├── Dockerfile           # Container definition
+├── package.json         # Node.js dependencies (for frontend libs)
+└── pyproject.toml       # Python project metadata and dependencies
 ```
 
 ---
