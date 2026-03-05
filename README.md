@@ -30,6 +30,13 @@
 - 🛠️ **Full CRUD**: Add, edit, and delete devices with ease.
 - 📦 **Docker Support**: Containerized for instant deployment.
 
+### 📸 Screenshots
+
+![Homepage](https://github.com/user-attachments/assets/4916b3c8-52d0-4024-80ca-4df5fc161f47)
+![View QR Code](https://github.com/user-attachments/assets/baa001ed-1421-4998-9a76-5fcf97fb4664)
+![Add/Edit Device, with Camera/Image upload](https://github.com/user-attachments/assets/7fd36e3a-2557-4e05-a6b4-5d52d0184754)
+
+
 ### 🛠 Tech Stack
 
 - **Backend:** [Python 3.14+](https://www.python.org/) + [Flask](https://flask.palletsprojects.com/)
