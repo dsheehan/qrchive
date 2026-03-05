@@ -14,21 +14,24 @@
 3. **Apply Changes**:
    - Update the version string in `pyproject.toml`.
    - Update the version string in `package.json`.
-4. **Update Changelog (Optional)**:
-   - If `CHANGELOG.md` exists, add a new section for the new version with the current date and a placeholder for changes.
+4. **Update Changelog**:
+   - In the `CHANGELOG.md`, if an `[Unreleased]` section exists, it should be renamed to the new version number and the current date.
+   - Otherwise, create a new section with a placeholder for the new version number and the current date.
+   - Review the git log since the last release to ensure all relevant changes are accurately reflected in the changelog.
 5. **Verification**:
    - Verify that all modified files contain the correct new version.
    - Run existing tests to ensure no regressions were introduced by version changes (especially if the version is used in the app, e.g., in `src/app.py`).
 6. **Git Tagging**:
    - Commit the changes if they are not already committed (e.g., `git commit -m "Bump version to X.Y.Z"`). DO NOT use the `--trailer` flag in the commit message.
    - Create a git tag for the new version (e.g., `git tag vX.Y.Z`).
-   - Push the tag to the remote repository (e.g., `git push upstream vX.Y.Z`).
+   - Push the tag to the remote repository (e.g., `git push origin vX.Y.Z`).
 
 **Success Criteria**:
 - `pyproject.toml` and `package.json` have the same, incremented version number.
 - The application (if it displays the version) correctly reflects the update.
 - No other code logic is modified.
 - A git tag (e.g., `v0.3.1`) has been created and pushed to the remote repository.
+- The `CHANGELOG.md` has been updated to reflect the new version, and no `[Unreleased]` exists
 
 ### Update CHANGELOG.md Prompt
 
