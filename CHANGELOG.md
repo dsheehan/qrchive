@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Created `scripts/extract_release_notes.py`: A cleaner, more maintainable script to parse `CHANGELOG.md` for a specific version.
+
+### Changed
+- Moved the release notes extraction logic from an inline Python script in `.github/workflows/release.yml` to a dedicated script in `scripts/extract_release_notes.py`.
+- Updated `.github/workflows/release.yml`: Replaced the complex inline Python with a simple call to the new script, passing the version as an argument.
+
 ## [0.5.0] - 2026-03-04
 
 ### Added
