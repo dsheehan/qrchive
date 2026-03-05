@@ -448,7 +448,10 @@ async function showWhatsNew() {
     if (latestRelease) {
         document.getElementById('whatsNewVersion').innerText = `Version ${latestRelease.latest_version}`;
         document.getElementById('whatsNewContent').innerText = latestRelease.release_notes || "No release notes provided.";
-        document.getElementById('viewOnGithub').href = latestRelease.html_url;
+        const viewOnGithubBtn = document.getElementById('viewOnGithub');
+        if (viewOnGithubBtn && latestRelease.html_url) {
+            viewOnGithubBtn.href = latestRelease.html_url;
+        }
     } else {
         document.getElementById('whatsNewContent').innerText = "Could not fetch release notes from GitHub.";
     }

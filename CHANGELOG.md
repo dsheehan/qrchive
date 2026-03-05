@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Reorganized `README.md` to be more user-focused, highlighting Docker deployment and `docker-compose`.
+- The `viewOnGithub` link in the "What's New" modal now uses the repository URL from `pyproject.toml`.
+- Updated `README.md` to be more user-focused, highlighting Docker deployment and `docker-compose`.
 - Moved developer-focused information (build from source, project structure) to `DEVELOPMENT.md`.
 
 ## [0.5.3] - 2026-03-04
