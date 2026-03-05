@@ -29,3 +29,16 @@
 - The application (if it displays the version) correctly reflects the update.
 - No other code logic is modified.
 - A git tag (e.g., `v0.3.1`) has been created and pushed to the remote repository.
+
+### Update CHANGELOG.md Prompt
+
+**Task**: After successfully completing a set of changes, update the `[Unreleased]` section in `CHANGELOG.md`.
+
+**Workflow**:
+1. **Locate Unreleased Section**: Find the `## [Unreleased]` section at the top of `CHANGELOG.md`. If it doesn't exist, create it below the header.
+2. **Summarize Changes**: Add a concise summary of the changes made, following the "Keep a Changelog" format (e.g., `### Added`, `### Changed`, `### Fixed`).
+3. **Refine Notes**: It's okay to update existing notes in the `[Unreleased]` section. Interim commits might refer to a work in progress that is subsequently completed; ensure the final entry reflects the completed work.
+
+**Success Criteria**:
+- `CHANGELOG.md` has an up-to-date `[Unreleased]` section reflecting the latest changes.
+- The summary is clear and accurately describes the modifications.

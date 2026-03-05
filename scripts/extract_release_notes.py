@@ -19,16 +19,20 @@ def extract_release_notes(version, changelog_path='CHANGELOG.md'):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python scripts/extract_release_notes.py <version>")
+        print("Usage: python scripts/extract_release_notes.py <version> [image_name]")
         sys.exit(1)
 
     version_to_find = sys.argv[1]
+    image_name = sys.argv[2] if len(sys.argv) > 2 else None
     notes = extract_release_notes(version_to_find)
 
     output_file = 'release_notes.txt'
     if notes:
         with open(output_file, 'w', encoding='utf-8') as out:
             out.write(notes)
+            if image_name:
+                out.write("\n\n### Docker Image\n")
+                out.write(f"```bash\ndocker pull {image_name}:{version_to_find}\n```")
     else:
         print(f'Warning: Version {version_to_find} not found in CHANGELOG.md')
         with open(output_file, 'w', encoding='utf-8') as out:
