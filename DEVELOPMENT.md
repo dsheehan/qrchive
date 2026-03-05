@@ -46,6 +46,22 @@ docker run -p 5000:5000 -v qrchive-data:/data qrchive
 
 ---
 
+### 📦 Maintenance & Releases
+
+To ensure consistency in project maintenance, we use AI agent prompts located in `Agents.md`.
+
+#### Preparing a Release
+Use the **"Increase Project Version Prompt"** in `Agents.md` to:
+- Bump the version in `pyproject.toml` and `package.json`.
+- Update the `CHANGELOG.md` (renaming `[Unreleased]` to the new version).
+- Create a Git tag and push it.
+
+#### Updating the Changelog
+Use the **"Update CHANGELOG.md Prompt"** after completing a feature or fix to:
+- Automatically summarize recent changes into the `[Unreleased]` section.
+
+---
+
 ### 🤝 Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests to help improve QRchive.

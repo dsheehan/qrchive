@@ -1,3 +1,9 @@
+# 🤖 AI Agent Prompts
+
+This file contains pre-defined prompts for AI agents (like GitHub Copilot, ChatGPT, or JetBrains Junie) to help with project maintenance tasks.
+
+## 🚀 Releasing
+
 ### Increase Project Version Prompt
 
 **Role**: You are a release manager assistant for the `QRchive` project.
