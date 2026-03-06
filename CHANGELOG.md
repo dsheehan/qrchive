@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added screenshots to the README.md to showcase the application interface.
+- On startup, if `/data/matter.csv` doesn't exist locally, it is now automatically created from a template.
 
 ## [0.6.1] - 2026-03-05
 

@@ -6,7 +6,26 @@ from repositories import MatterRepository
 import tomllib
 from licenses import get_licenses_data
 
+import shutil
+
 app = Flask(__name__)
+
+# Ensure the app knows where to find the CSV file
+# Use an environment variable for flexibility (especially for Docker mounts)
+def get_data_path():
+    return os.getenv('MATTER_DATA_PATH', os.path.join(os.getcwd(), 'data', 'matter.csv'))
+
+def get_template_path():
+    return os.path.join(os.getcwd(), 'src', 'data', 'matter_template.csv')
+
+def ensure_data_file():
+    data_path = get_data_path()
+    if not os.path.exists(data_path):
+        os.makedirs(os.path.dirname(data_path), exist_ok=True)
+        shutil.copy(get_template_path(), data_path)
+        print(f"Created {data_path} from template.")
+
+ensure_data_file()
 
 def get_project_metadata():
     try:
@@ -29,11 +48,6 @@ GITHUB_REPO = get_github_repo()
 @app.context_processor
 def inject_metadata():
     return dict(version=VERSION, github_url=GITHUB_URL, github_repo=GITHUB_REPO)
-
-# Ensure the app knows where to find the CSV file
-# Use an environment variable for flexibility (especially for Docker mounts)
-def get_data_path():
-    return os.getenv('MATTER_DATA_PATH', os.path.join(os.getcwd(), 'data', 'matter.csv'))
 
 def get_repo():
     return MatterRepository(get_data_path())
