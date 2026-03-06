@@ -21,11 +21,22 @@
     // Apply on load
     setTheme(getPreferredTheme());
 
-    // Initialize APP_CONFIG from body data attributes
+    // Initialize APP_CONFIG from body data attributes (deferred to DOMContentLoaded)
     window.APP_CONFIG = {
-        version: html.getAttribute('data-version') || '0.0.0',
-        githubRepo: html.getAttribute('data-github-repo') || ''
+        version: '0.0.0',
+        githubRepo: ''
     };
+
+    function initConfig() {
+        window.APP_CONFIG.version = document.body.getAttribute('data-version') || '0.0.0';
+        window.APP_CONFIG.githubRepo = document.body.getAttribute('data-github-repo') || '';
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initConfig);
+    } else {
+        initConfig();
+    }
     // Keep in sync with OS changes when no explicit preference stored
     if (!localStorage.getItem(storageKey) && window.matchMedia) {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
@@ -390,8 +401,12 @@ let latestRelease = null;
 
 function isNewerVersion(latest, current) {
     try {
-        const l = latest.replace(/^v/, '').split('.').map(Number);
-        const c = current.replace(/^v/, '').split('.').map(Number);
+        const parse = v => v.replace(/^v/, '').split('.').map(Number);
+        const l = parse(latest);
+        const c = parse(current);
+        
+        if (l.some(isNaN) || c.some(isNaN)) return false;
+
         for (let i = 0; i < Math.max(l.length, c.length); i++) {
             const lv = l[i] || 0;
             const cv = c[i] || 0;
@@ -411,13 +426,15 @@ async function fetchLatestRelease() {
         if (response.ok) {
             const data = await response.json();
             const latestTag = data.tag_name || "0.0.0";
-            return {
+            const result = {
                 current_version: window.APP_CONFIG.version,
                 latest_version: latestTag,
                 is_newer: isNewerVersion(latestTag, window.APP_CONFIG.version),
                 release_notes: data.body,
                 html_url: data.html_url
             };
+            console.log("Latest release fetch result:", result);
+            return result;
         }
     } catch (err) {
         console.error("Failed to fetch release info from GitHub:", err);
