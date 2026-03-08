@@ -399,30 +399,18 @@ async function importCSV(input) {
 let html5QrCode = null;
 let latestRelease = null;
 
-function isNewerVersion(latest, current) {
-    try {
-        const parse = v => v.replace(/^v/, '').split('.').map(Number);
-        const l = parse(latest);
-        const c = parse(current);
-        
-        if (l.some(isNaN) || c.some(isNaN)) return false;
-
-        for (let i = 0; i < Math.max(l.length, c.length); i++) {
-            const lv = l[i] || 0;
-            const cv = c[i] || 0;
-            if (lv > cv) return true;
-            if (lv < cv) return false;
-        }
-        return false;
-    } catch (err) {
-        return false;
-    }
-}
-
 async function fetchLatestRelease() {
-    if (!window.APP_CONFIG || !window.APP_CONFIG.githubRepo) return null;
+    if (!window.APP_CONFIG || !window.APP_CONFIG.githubRepo) {
+        console.warn("APP_CONFIG or githubRepo missing, skipping release fetch.");
+        return null;
+    }
     try {
-        const response = await fetch(`https://api.github.com/repos/${window.APP_CONFIG.githubRepo}/releases/latest`);
+        console.log(`Fetching latest release from GitHub: ${window.APP_CONFIG.githubRepo}`);
+        const response = await fetch(`https://api.github.com/repos/${window.APP_CONFIG.githubRepo}/releases/latest`, {
+            headers: {
+                'Accept': 'application/vnd.github.v3.html+json'
+            }
+        });
         if (response.ok) {
             const data = await response.json();
             const latestTag = data.tag_name || "0.0.0";
@@ -430,11 +418,17 @@ async function fetchLatestRelease() {
                 current_version: window.APP_CONFIG.version,
                 latest_version: latestTag,
                 is_newer: isNewerVersion(latestTag, window.APP_CONFIG.version),
-                release_notes: data.body,
+                release_notes_html: data.body_html,
                 html_url: data.html_url
             };
             console.log("Latest release fetch result:", result);
             return result;
+        } else {
+            console.error(`GitHub API responded with status: ${response.status} ${response.statusText}`);
+            // Check for rate limiting
+            if (response.status === 403 && response.headers.get('X-RateLimit-Remaining') === '0') {
+                console.warn("GitHub API rate limit exceeded.");
+            }
         }
     } catch (err) {
         console.error("Failed to fetch release info from GitHub:", err);
@@ -447,7 +441,7 @@ async function checkUpdates() {
         latestRelease = await fetchLatestRelease();
         if (latestRelease && latestRelease.is_newer) {
             const indicator = document.getElementById('updateIndicator');
-            if (indicator) indicator.style.display = 'block';
+            if (indicator) indicator.style.display = 'inline-block';
         }
     } catch (err) {
         console.error("Failed to check for updates:", err);
@@ -456,6 +450,10 @@ async function checkUpdates() {
 
 async function showWhatsNew() {
     const modalEl = document.getElementById('whatsNewModal');
+    if (!modalEl) {
+        console.error("whatsNewModal element not found!");
+        return;
+    }
     const modal = new bootstrap.Modal(modalEl);
     
     if (!latestRelease) {
@@ -464,13 +462,16 @@ async function showWhatsNew() {
 
     if (latestRelease) {
         document.getElementById('whatsNewVersion').innerText = `Version ${latestRelease.latest_version}`;
-        document.getElementById('whatsNewContent').innerText = latestRelease.release_notes || "No release notes provided.";
+        // Use a fallback if body_html is missing (though our header requests it)
+        const notes = latestRelease.release_notes_html || "<p>No release notes provided in HTML format.</p>";
+        document.getElementById('whatsNewContent').innerHTML = notes;
+        
         const viewOnGithubBtn = document.getElementById('viewOnGithub');
         if (viewOnGithubBtn && latestRelease.html_url) {
             viewOnGithubBtn.href = latestRelease.html_url;
         }
     } else {
-        document.getElementById('whatsNewContent').innerText = "Could not fetch release notes from GitHub.";
+        document.getElementById('whatsNewContent').innerHTML = "<p class='text-danger'>Could not fetch release notes from GitHub.</p>";
     }
     
     modal.show();

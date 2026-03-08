@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Made the version number in the navbar a link to the corresponding GitHub release.
+- Added a new `src/static/js/utils.js` for shared utility functions, reducing code duplication in tests.
+- New unit tests for repository slug extraction (`tests/test_github_repo_logic.py`).
+- New Node.js tests for "What's New" modal data handling (`tests/test_whats_new_logic.js`).
+
+### Changed
+- Switched "What's New" modal to fetch and render pre-rendered HTML release notes from the GitHub API using the `Accept: application/vnd.github.v3.html+json` header. (Fixes [#3](https://github.com/dsheehan/qrchive/issues/3))
+- Refactored `isNewerVersion` function from `matter.js` into `utils.js` for better testability.
+- Improved repository URL parsing in `app.py` to handle more formats and edge cases.
+- Updated `style.css` to properly style the HTML elements in the release notes.
 
 ## [0.7.0] - 2026-03-06
 

@@ -38,12 +38,15 @@ metadata = get_project_metadata()
 VERSION = metadata.get("project", {}).get("version", "0.0.0")
 GITHUB_URL = metadata.get("project", {}).get("urls", {}).get("Repository", "https://github.com/dsheehan/qrchive")
 
-def get_github_repo():
-    if "github.com/" in GITHUB_URL:
-        return GITHUB_URL.split("github.com/")[1].strip("/")
+def get_github_repo(url):
+    if "github.com/" in url:
+        # Expected GITHUB_URL format: https://github.com/user/repo
+        parts = url.split("github.com/")[1].strip("/").split("/")
+        if len(parts) >= 2:
+            return f"{parts[0]}/{parts[1]}"
     return "dsheehan/qrchive" # Fallback
 
-GITHUB_REPO = get_github_repo()
+GITHUB_REPO = get_github_repo(GITHUB_URL)
 
 @app.context_processor
 def inject_metadata():

@@ -56,6 +56,10 @@
 .markdown-content {
     max-height: 400px;
     overflow-y: auto;
-    white-space: pre-wrap;
     font-family: var(--bs-font-sans-serif);
 }
+
+.markdown-content h3 { font-size: 1.2rem; margin-top: 1rem; }
+.markdown-content ul { padding-left: 1.5rem; }
+.markdown-content li { margin-bottom: 0.25rem; }
+.markdown-content p { margin-bottom: 0.5rem; }
