@@ -63,3 +63,45 @@
 .markdown-content ul { padding-left: 1.5rem; }
 .markdown-content li { margin-bottom: 0.25rem; }
 .markdown-content p { margin-bottom: 0.5rem; }
+
+.qr-preview-container:hover .qr-placeholder {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.device-card-col .card {
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.edit-btn-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.device-card-col .card:hover .edit-btn-container {
+    opacity: 1;
+}
+
+.device-card-col .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-bs-theme="dark"] .bg-light-subtle {
+    background-color: var(--bs-tertiary-bg) !important;
+}
+
+.qr-placeholder svg, .qr-placeholder canvas {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}

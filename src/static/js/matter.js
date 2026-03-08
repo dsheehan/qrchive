@@ -660,33 +660,51 @@ window.addEventListener("popstate", (event) => {
     }
     function applyGlobalFilter(){
         const table = getTable();
-        if (!table) return;
         const q = (document.getElementById('globalFilter')?.value || '').toLowerCase().trim();
         const words = q.split(/\s+/).filter(w => w.length > 0);
-        const headers = getHeaderCells(table);
-        const rows = getBodyRows(table);
-        
-        Array.from(rows).forEach(tr=>{
-            let match = true;
-            if (words.length > 0) {
-                // For each word, we must find it in at least one visible column
-                for (const word of words) {
-                    let wordFound = false;
-                    for (let i=0; i<headers.length; i++) {
-                        if (!isColumnVisible(i)) continue;
-                        const text = (tr.cells[i]?.innerText || '').toLowerCase();
-                        if (text.includes(word)) {
-                            wordFound = true;
+
+        // Filter Table Rows
+        if (table) {
+            const headers = getHeaderCells(table);
+            const rows = getBodyRows(table);
+            
+            Array.from(rows).forEach(tr=>{
+                let match = true;
+                if (words.length > 0) {
+                    for (const word of words) {
+                        let wordFound = false;
+                        for (let i=0; i<headers.length; i++) {
+                            if (!isColumnVisible(i)) continue;
+                            const text = (tr.cells[i]?.innerText || '').toLowerCase();
+                            if (text.includes(word)) {
+                                wordFound = true;
+                                break;
+                            }
+                        }
+                        if (!wordFound) {
+                            match = false;
                             break;
                         }
                     }
-                    if (!wordFound) {
+                }
+                tr.style.display = match ? '' : 'none';
+            });
+        }
+
+        // Filter Grid Cards
+        const gridItems = document.querySelectorAll('.device-card-col');
+        gridItems.forEach(item => {
+            let match = true;
+            if (words.length > 0) {
+                const text = item.innerText.toLowerCase();
+                for (const word of words) {
+                    if (!text.includes(word)) {
                         match = false;
                         break;
                     }
                 }
             }
-            tr.style.display = match ? '' : 'none';
+            item.classList.toggle('d-none', !match);
         });
     }
     function bindSorting(){
@@ -720,12 +738,63 @@ window.addEventListener("popstate", (event) => {
         const input = document.getElementById('globalFilter');
         if (input){ input.addEventListener('input', applyGlobalFilter); }
     }
+    window.setView = function(view) {
+        const listView = document.getElementById('listView');
+        const gridView = document.getElementById('gridView');
+        const listViewBtn = document.getElementById('listViewBtn');
+        const gridViewBtn = document.getElementById('gridViewBtn');
+
+        if (view === 'grid') {
+            listView.classList.add('d-none');
+            gridView.classList.remove('d-none');
+            listViewBtn.classList.remove('active');
+            gridViewBtn.classList.add('active');
+            renderGridQRCodes();
+        } else {
+            listView.classList.remove('d-none');
+            gridView.classList.add('d-none');
+            listViewBtn.classList.add('active');
+            gridViewBtn.classList.remove('active');
+        }
+        localStorage.setItem('preferredView', view);
+    };
+
+    function renderGridQRCodes() {
+        const placeholders = document.querySelectorAll('.qr-placeholder');
+        placeholders.forEach(ph => {
+            if (ph.dataset.rendered) return;
+            const code = ph.dataset.code;
+            const precomputed = ph.dataset.precomputed;
+            const finalCode = precomputed || formatMatterQR(code);
+            
+            if (typeof QRCodeStyling === 'undefined') {
+                console.error("QRCodeStyling is not loaded!");
+                return;
+            }
+            const qr = new QRCodeStyling({
+                width: 250,
+                height: 250,
+                type: "canvas",
+                data: finalCode,
+                dotsOptions: { color: "#000000", type: "square" },
+                backgroundOptions: { color: "#ffffff" },
+                qrOptions: { errorCorrectionLevel: "H" }
+            });
+            ph.innerHTML = '';
+            qr.append(ph);
+            ph.dataset.rendered = "true";
+        });
+    }
+
     function init(){
         applyColumnVisibility();
         bindSorting();
         bindColumnToggles();
         bindFilter();
         checkUpdates();
+
+        const savedView = localStorage.getItem('preferredView') || 'list';
+        setView(savedView);
     }
     if (document.readyState === 'loading'){
         document.addEventListener('DOMContentLoaded', init);

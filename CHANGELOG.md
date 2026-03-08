@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Added Grid View for devices, allowing users to toggle between a list view and a QR-centric grid view. (Fixes [#4](https://github.com/dsheehan/qrchive/issues/4))
+- Persistent view preference using `localStorage`.
+- Dynamic QR code rendering in the grid using `QRCodeStyling` with Canvas for identical visual consistency with the QR modal.
+- Enhanced search filtering to support both list and grid views simultaneously.
+
 ## [0.7.1] - 2026-03-08
 
 ### Added

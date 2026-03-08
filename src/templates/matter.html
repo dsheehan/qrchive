@@ -37,8 +37,16 @@
                     <li class="px-2 small text-muted">Uncheck to hide a column</li>
                 </ul>
             </div>
+            <div class="btn-group" role="group" aria-label="View Toggle">
+                <button type="button" class="btn btn-outline-secondary active" id="listViewBtn" onclick="setView('list')" title="List View">
+                    <i class="fa-solid fa-list"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary" id="gridViewBtn" onclick="setView('grid')" title="Grid View">
+                    <i class="fa-solid fa-table-cells-large"></i>
+                </button>
+            </div>
         </div>
-        <div class="table-responsive">
+        <div id="listView" class="table-responsive">
             <table id="devicesTable" class="table table-striped table-hover mt-0">
                 <thead>
                     <tr>
@@ -73,6 +81,36 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+
+        <div id="gridView" class="d-none">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="devicesGrid">
+                {% for row in data %}
+                <div class="col device-card-col" data-mac="{{ row['MAC'] }}">
+                    <div class="card h-100 shadow-sm border-0 bg-light-subtle">
+                        <div class="edit-btn-container">
+                            <button class="btn btn-secondary btn-sm" onclick="openDeviceModal('{{ row['MAC'] }}')" title="Edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                        </div>
+                        <div class="card-body text-center d-flex flex-column">
+                            <div class="mb-3 mt-2 flex-grow-1 d-flex align-items-center justify-content-center">
+                                {% if row['Pairing Code'] %}
+                                <div class="qr-preview-container cursor-pointer" onclick="showQRCode('{{ row['Pairing Code'] }}', '{{ row['Product'] }}', '{{ row['QR'] or '' }}')">
+                                    <div class="qr-placeholder" data-code="{{ row['Pairing Code'] }}" data-precomputed="{{ row['QR'] or '' }}">
+                                        <i class="fa-solid fa-qrcode fa-5x text-secondary opacity-25"></i>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="text-muted small">No QR available</div>
+                                {% endif %}
+                            </div>
+                            <h5 class="card-title text-truncate mb-1" title="{{ row['Description'] }}">{{ row['Description'] }}</h5>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
