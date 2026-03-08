@@ -759,6 +759,21 @@ window.addEventListener("popstate", (event) => {
         localStorage.setItem('preferredView', view);
     };
 
+    window.printGrid = function() {
+        // Ensure we are in grid view and QR codes are rendered
+        const currentView = localStorage.getItem('preferredView');
+        if (currentView !== 'grid') {
+            window.setView('grid');
+        } else {
+            renderGridQRCodes();
+        }
+        
+        // Short delay to ensure everything is rendered before print dialog
+        setTimeout(() => {
+            window.print();
+        }, 300);
+    };
+
     function renderGridQRCodes() {
         const placeholders = document.querySelectorAll('.qr-placeholder');
         placeholders.forEach(ph => {
@@ -772,8 +787,8 @@ window.addEventListener("popstate", (event) => {
                 return;
             }
             const qr = new QRCodeStyling({
-                width: 250,
-                height: 250,
+                width: 200,
+                height: 200,
                 type: "canvas",
                 data: finalCode,
                 dotsOptions: { color: "#000000", type: "square" },

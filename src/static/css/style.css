@@ -105,3 +105,74 @@
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
+/* Print Styles */
+@media print {
+    /* Hide non-printable elements */
+    .navbar, .btn, .btn-group, .dropdown, .search-container, .edit-btn-container, .update-indicator-btn, .navbar-version {
+        display: none !important;
+    }
+
+    /* Force Grid View visibility and hide List View */
+    #listView {
+        display: none !important;
+    }
+    #gridView {
+        display: block !important;
+    }
+
+    /* Reset container and body for print */
+    body {
+        background-color: white !important;
+        color: black !important;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Grid adjustments for print */
+    #devicesGrid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        row-gap: 0.5rem !important;
+        column-gap: 0.5rem !important;
+    }
+
+    .device-card-col {
+        width: 23% !important; /* Approximately 4 columns with some margin */
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 0.5rem;
+        padding: 0 0.25rem !important;
+    }
+
+    .card {
+        border: 1px solid #dee2e6 !important;
+        box-shadow: none !important;
+        background-color: white !important;
+    }
+
+    .card-body {
+        padding: 0.5rem !important;
+    }
+
+    .card-title {
+        font-size: 0.8rem !important;
+        color: black !important;
+        margin-top: 0.25rem !important;
+    }
+
+    /* Ensure QR codes are visible and correctly sized */
+    .qr-placeholder canvas {
+        box-shadow: none !important;
+        border: 1px solid #eee;
+        width: 100% !important;
+        height: auto !important;
+    }
+}
