@@ -3,13 +3,15 @@
         <a class="navbar-brand d-inline-flex align-items-center" href="/">
             <i class="fa-sharp fa-solid fa-qrcode me-2"></i>
             <span class="navbar-title">QRchive</span>
-            <small class="text-muted ms-1 navbar-version">v{{ version }}</small>
-            <span id="updateIndicator" class="ms-1" style="display: none;">
-                <button class="btn btn-outline-warning border-0 p-0 d-inline-flex align-items-center justify-content-center update-indicator-btn" title="New version available!" onclick="event.preventDefault(); showWhatsNew()">
-                    <i class="fa-solid fa-circle-arrow-up fa-lg"></i>
-                </button>
-            </span>
         </a>
+        <a href="{{ github_url }}/releases/tag/v{{ version }}" target="_blank" class="text-decoration-none">
+            <small class="text-muted ms-1 navbar-version">v{{ version }}</small>
+        </a>
+        <span id="updateIndicator" class="ms-1" style="display: none;">
+            <button class="btn btn-outline-warning border-0 p-0 d-inline-flex align-items-center justify-content-center update-indicator-btn" title="New version available!" onclick="event.preventDefault(); showWhatsNew()">
+                <i class="fa-solid fa-circle-arrow-up fa-lg"></i>
+            </button>
+        </span>
         <div class="ms-auto d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary border-0" title="What's New" onclick="showWhatsNew()">
                 <i class="fa-solid fa-bullhorn"></i>
