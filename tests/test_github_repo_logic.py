@@ -1,4 +1,4 @@
-from src.app import get_github_repo
+from app import get_github_repo
 
 def test_get_github_repo_standard():
     url = "https://github.com/dsheehan/qrchive"

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Standardized pytest path resolution by adding `src` to `pythonpath` in `pyproject.toml`.
+- Removed redundant `sys.path` hack in `tests/conftest.py`.
+- Fixed inconsistent import in `tests/test_github_repo_logic.py`.
+
 ### Changed
 - Converted large images in `README.md` to thumbnails for a more compact and organized layout.
 - Added Grid View and Print View screenshots to `README.md`.
