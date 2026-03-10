@@ -47,7 +47,8 @@ This file contains pre-defined prompts for AI agents (like GitHub Copilot, ChatG
 1. **Locate Unreleased Section**: Find the `## [Unreleased]` section at the top of `CHANGELOG.md`. If it doesn't exist, create it below the header.
 2. **Summarize Changes**: Add a concise summary of the changes made, following the "Keep a Changelog" format (e.g., `### Added`, `### Changed`, `### Fixed`).
 3. **Refine Notes**: It's okay to update existing notes in the `[Unreleased]` section. Interim commits might refer to a work in progress that is subsequently completed; ensure the final entry reflects the completed work.
+4. **No Intermediate States**: Do not include information about intermediate steps, experimental changes that were later reverted, or superseded implementations. The changelog should only reflect the final state that will be committed to the codebase.
 
 **Success Criteria**:
 - `CHANGELOG.md` has an up-to-date `[Unreleased]` section reflecting the latest changes.
-- The summary is clear and accurately describes the modifications.
+- The summary is clear, accurately describes the modifications, and excludes intermediate states.
