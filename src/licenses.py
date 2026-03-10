@@ -144,13 +144,57 @@ def _get_js_licenses(js_direct_dependencies, seen):
         with open(os.path.join(os.getcwd(), 'package.json'), "r") as f:
             pj = json.load(f)
             deps = pj.get('dependencies', {})
-            for name, version in deps.items():
+            for name, version_spec in deps.items():
+                version = version_spec.lstrip('^~')
+                license_name = "Unknown"
+                url = f"https://www.npmjs.com/package/{name}"
+                license_url = ""
+                
+                # Try to get more info from the package's own package.json if available
+                pkg_json_path = os.path.join(os.getcwd(), 'node_modules', name, 'package.json')
+                if os.path.exists(pkg_json_path):
+                    try:
+                        with open(pkg_json_path, "r") as fj:
+                            pj_info = json.load(fj)
+                            version = pj_info.get('version', version)
+                            license_name = pj_info.get('license', "Unknown")
+                            if isinstance(license_name, list):
+                                license_name = " AND ".join(license_name)
+                            
+                            # Get repository URL
+                            repo = pj_info.get('repository')
+                            if isinstance(repo, dict):
+                                url = repo.get('url', url)
+                            elif isinstance(repo, str):
+                                url = repo
+                            
+                            if url:
+                                # Clean up git URLs
+                                url = url.replace('git+', '').replace('git://', 'https://').replace('.git', '')
+                                if 'github.com' in url and not url.startswith('http'):
+                                    url = 'https://' + url.replace('github.com:', 'github.com/')
+                            
+                            # Fallback to homepage
+                            if not url or 'npmjs.com' in url:
+                                url = pj_info.get('homepage', url)
+                            
+                            # Heuristic for license URL
+                            if url and 'github.com' in url:
+                                license_name_lower = name.lower()
+                                license_file = "LICENSE"
+                                if 'fontawesome' in license_name_lower:
+                                    license_file = "LICENSE.txt"
+                                
+                                license_url = f"{url.rstrip('/')}/blob/main/{license_file}"
+                    except (json.JSONDecodeError, OSError):
+                        pass
+
                 js_licenses.append({
                     "name": name,
-                    "version": version.lstrip('^~'),
-                    "license": "Unknown",
-                    "license_url": "",
-                    "url": f"https://www.npmjs.com/package/{name}",
+                    "version": version,
+                    "license": license_name,
+                    "license_url": license_url,
+                    "url": url,
                     "type": "JS/CSS",
                     "display_name": name,
                 })

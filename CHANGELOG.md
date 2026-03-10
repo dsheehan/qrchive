@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Separated testing and publishing into distinct workflow jobs for better isolation and use of specialized environments.
 
 ### Fixed
+- Fixed JS/CSS license discovery when `package-lock.json` is missing by reading dependency metadata from `node_modules`.
 - Fixed three failing `pytest` cases by correctly initializing test data using a temporary CSV file in `tests/conftest.py`.
 - Standardized pytest path resolution by adding `src` to `pythonpath` in `pyproject.toml`.
 - Removed redundant `sys.path` hack in `tests/conftest.py`.
