@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Integrated Python and Node.js unit testing into the CI/CD pipeline using GitHub Actions.
+- Included unit test summaries and JUnit XML artifacts in GitHub Actions workflow.
 - Modernized JavaScript tests using the built-in `node:test` runner and `node:assert` module.
 - Added a startup message to `src/app.py` that prints the data file path for debugging.
 - Added Grid View and Print View screenshots to `README.md`.
