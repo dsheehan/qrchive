@@ -12,8 +12,8 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  test:
-    name: Run Unit Tests
+  test-python:
+    name: Run Python Tests
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/astral-sh/uv:python3.14-trixie-slim
@@ -29,9 +29,26 @@ jobs:
       run: |
         uv run pytest
 
+  test-js:
+    name: Run JS Tests
+    runs-on: ubuntu-latest
+    container:
+      image: node:20-slim
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Node.js dependencies
+      run: |
+        npm install
+
+    - name: Run Node.js unit tests
+      run: |
+        npm test
+
   publish:
     name: Build and Release
-    needs: test
+    needs: [test-python, test-js]
     runs-on: ubuntu-latest
     permissions:
       contents: write

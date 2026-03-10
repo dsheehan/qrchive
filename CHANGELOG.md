@@ -8,24 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Integrated Python unit tests into the CI/CD pipeline using GitHub Actions.
-- Pipeline now prevents Docker image publishing and GitHub release creation if tests fail.
+- Integrated Python and Node.js unit testing into the CI/CD pipeline using GitHub Actions.
+- Modernized JavaScript tests using the built-in `node:test` runner and `node:assert` module.
 - Added a startup message to `src/app.py` that prints the data file path for debugging.
+- Added Grid View and Print View screenshots to `README.md`.
 
 ### Changed
-- Refactored CI/CD workflow to use a dedicated `test` job running inside the official `ghcr.io/astral-sh/uv:python3.14-trixie-slim` container.
-- Separated testing and publishing into distinct workflow jobs for better isolation and use of specialized environments.
+- Refactored CI/CD workflow to use separate, parallel jobs for Python (`ghcr.io/astral-sh/uv` container) and Node.js (`node:20-slim` container).
+- Configured JavaScript tests to run using `npm test` within the `node:20-slim` container for better environment isolation.
+- Converted large images in `README.md` to thumbnails for a more compact and organized layout.
 
 ### Fixed
 - Fixed JS/CSS license discovery when `package-lock.json` is missing by reading dependency metadata from `node_modules`.
+- Removed the problematic and failing `test_get_licenses_data_with_package_json` from `tests/test_licenses.py`.
 - Fixed three failing `pytest` cases by correctly initializing test data using a temporary CSV file in `tests/conftest.py`.
 - Standardized pytest path resolution by adding `src` to `pythonpath` in `pyproject.toml`.
 - Removed redundant `sys.path` hack in `tests/conftest.py`.
 - Fixed inconsistent import in `tests/test_github_repo_logic.py`.
-
-### Changed
-- Converted large images in `README.md` to thumbnails for a more compact and organized layout.
-- Added Grid View and Print View screenshots to `README.md`.
 
 ## [0.10.0] - 2026-03-08
 

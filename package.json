@@ -3,6 +3,9 @@
   "version": "0.10.0",
   "description": "QR code management",
   "private": true,
+  "scripts": {
+    "test": "node --test tests/*.js"
+  },
   "dependencies": {
     "bootstrap": "^5.3.3",
     "halfmoon": "^2.0.2",

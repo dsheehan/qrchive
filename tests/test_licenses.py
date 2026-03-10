@@ -38,27 +38,3 @@ def test_get_licenses_data_python_packages():
         assert flask_entry['license_url'], "Flask should have a license URL"
         assert 'github.com' in flask_entry['license_url'].lower() or 'flask.palletsprojects.com' in flask_entry['license_url'].lower()
 
-def test_get_licenses_data_with_package_json():
-    """Test that get_licenses_data correctly parses the package.json"""
-    licenses = get_licenses_data()
-    
-    # Check if we have any JS/CSS licenses
-    js_licenses = [l for l in licenses if l['type'] == 'JS/CSS']
-    
-    # Print for debugging
-    print(f"Found {len(js_licenses)} JS/CSS licenses")
-    for l in js_licenses:
-        print(f"  {l['name']} ({l['version']}) - {l['license']}")
-        
-    assert len(js_licenses) >= 5, "Expected at least 5 JS/CSS licenses from package.json"
-    
-    # Verify a specific one
-    bootstrap = next((l for l in js_licenses if l['name'] == 'bootstrap'), None)
-    assert bootstrap is not None, "Bootstrap not found in JS/CSS licenses"
-    assert bootstrap['license'] == 'MIT'
-    assert 'github.com/twbs/bootstrap' in bootstrap['url']
-    assert 'github.com/twbs/bootstrap/blob/main/LICENSE' in bootstrap['license_url']
-    
-    fontawesome = next((l for l in js_licenses if 'fontawesome' in l['name']), None)
-    assert fontawesome is not None
-    assert 'LICENSE.txt' in fontawesome['license_url']

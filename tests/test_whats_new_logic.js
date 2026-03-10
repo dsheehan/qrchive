@@ -1,5 +1,6 @@
-// Test script to verify the logic of the "What's New" modal data handling
-// This mocks the GitHub API response and verifies if the expected fields are extracted and injected
+const test = require('node:test');
+const assert = require('node:assert');
+const { isNewerVersion } = require('../src/static/js/utils.js');
 
 // Mock window.APP_CONFIG
 global.window = {
@@ -28,9 +29,6 @@ global.document = {
     }
 };
 
-// Load functions from matter.js
-const { isNewerVersion } = require('../src/static/js/utils.js');
-
 // Mock fetch response for GitHub API
 const mockApiResponse = {
     ok: true,
@@ -41,9 +39,7 @@ const mockApiResponse = {
     })
 };
 
-async function testFetchLatestRelease() {
-    console.log("Running testFetchLatestRelease...");
-    
+test('testFetchLatestRelease correctly identifies newer releases', async (t) => {
     // Simulating what happens in matter.js
     const data = await mockApiResponse.json();
     const latestTag = data.tag_name || "0.0.0";
@@ -55,28 +51,7 @@ async function testFetchLatestRelease() {
         html_url: data.html_url
     };
 
-    console.log("Mock result:", JSON.stringify(result, null, 2));
-
-    // Assertions
-    let passed = true;
-    if (result.latest_version !== "v0.7.0") {
-        console.error("❌ latest_version mismatch");
-        passed = false;
-    }
-    if (result.is_newer !== true) {
-        console.error("❌ is_newer should be true");
-        passed = false;
-    }
-    if (result.release_notes_html !== "<h3>What's New</h3><ul><li>Fixed bugs</li></ul>") {
-        console.error("❌ release_notes_html mismatch");
-        passed = false;
-    }
-    
-    if (passed) {
-        console.log("✅ testFetchLatestRelease passed!");
-    } else {
-        process.exit(1);
-    }
-}
-
-testFetchLatestRelease();
+    assert.strictEqual(result.latest_version, "v0.7.0", "latest_version should be v0.7.0");
+    assert.strictEqual(result.is_newer, true, "is_newer should be true");
+    assert.strictEqual(result.release_notes_html, "<h3>What's New</h3><ul><li>Fixed bugs</li></ul>", "release_notes_html mismatch");
+});
