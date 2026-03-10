@@ -32,9 +32,11 @@
 
 ### 📸 Screenshots
 
-![Homepage](https://github.com/user-attachments/assets/4916b3c8-52d0-4024-80ca-4df5fc161f47)
-![View QR Code](https://github.com/user-attachments/assets/baa001ed-1421-4998-9a76-5fcf97fb4664)
-![Add/Edit Device, with Camera/Image upload](https://github.com/user-attachments/assets/7fd36e3a-2557-4e05-a6b4-5d52d0184754)
+<img src="https://github.com/user-attachments/assets/4916b3c8-52d0-4024-80ca-4df5fc161f47" alt="Homepage" height="200">
+<img src="https://github.com/user-attachments/assets/a59855ef-c444-4c83-9bd0-3cf2e3ac1a6b" alt="Grid View" height="200">
+<img src="https://github.com/user-attachments/assets/4019255c-6942-4cb2-b424-9d7f055b272d" alt="Print View" height="200">
+<img src="https://github.com/user-attachments/assets/baa001ed-1421-4998-9a76-5fcf97fb4664" alt="View QR Code" height="200">
+<img src="https://github.com/user-attachments/assets/7fd36e3a-2557-4e05-a6b4-5d52d0184754" alt="Add/Edit Device, with Camera/Image upload" height="200">
 
 
 ### 🛠 Tech Stack
