@@ -24,6 +24,7 @@ def ensure_data_file():
         os.makedirs(os.path.dirname(data_path), exist_ok=True)
         shutil.copy(get_template_path(), data_path)
         print(f"Created {data_path} from template.")
+    print(f"Data path: {data_path}")
 
 ensure_data_file()
 
