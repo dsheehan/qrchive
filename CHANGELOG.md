@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Integrated Python unit tests into the CI/CD pipeline using GitHub Actions.
+- Pipeline now prevents Docker image publishing and GitHub release creation if tests fail.
+
+### Changed
+- Refactored CI/CD workflow to use a dedicated `test` job running inside the official `ghcr.io/astral-sh/uv:python3.14-trixie-slim` container.
+- Separated testing and publishing into distinct workflow jobs for better isolation and use of specialized environments.
+
 ### Fixed
 - Standardized pytest path resolution by adding `src` to `pythonpath` in `pyproject.toml`.
 - Removed redundant `sys.path` hack in `tests/conftest.py`.
