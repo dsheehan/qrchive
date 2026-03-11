@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Grid View and Print View screenshots to `README.md`.
 - Enhanced license data extraction from `node_modules` in `src/licenses.py` to include license types and repository URLs.
 - Added a "No Intermediate States" guideline to `Agents.md` for `CHANGELOG.md` updates.
+- Added comprehensive regression tests for the common JUnit XML test reporter script.
 
 ### Changed
 - Refactored CI/CD workflow to use separate, parallel jobs for Python (`ghcr.io/astral-sh/uv` container) and Node.js (`node:20-slim` container).
@@ -22,9 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Converted large images in `README.md` to thumbnails for a more compact and organized layout using `<img>` tags.
 - Improved test isolation in `tests/conftest.py` by using a temporary CSV file for `MATTER_DATA_PATH`.
 - Updated `pyproject.toml` with `pytest` configuration for better test discovery.
+- Enhanced CI/CD pipeline to fail the build if either Python or JS tests have zero passes or any failures/errors.
 
 ### Fixed
-- Fixed JS test summary extraction in GitHub Actions by counting `<testcase>` tags in JUnit XML, as Node.js 20's default reporter does not include summary attributes in the `<testsuites>` element.
+- Improved test summary extraction in GitHub Actions by implementing a robust, common shell script (`scripts/parse_junit.sh`) that correctly handles multiple JUnit XML formats, even when tags appear in error messages.
 - Fixed Node.js test runner in GitHub Actions by adding missing `--test` flag and ensuring correct reporter configuration.
 - Streamlined GitHub Actions workflow by removing redundant output redirection and error suppression in JavaScript tests.
 - Restored `npm test` functionality to work locally without arguments by including the `tests/*.js` pattern in `package.json`.

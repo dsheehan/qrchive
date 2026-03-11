@@ -31,10 +31,8 @@ jobs:
       id: python-tests
       run: |
         uv run pytest --junitxml=pytest-results.xml
-        PASSED=$(grep -oP 'tests="\K[^"]+' pytest-results.xml | head -1)
-        FAILURES=$(grep -oP 'failures="\K[^"]+' pytest-results.xml | head -1)
-        ERRORS=$(grep -oP 'errors="\K[^"]+' pytest-results.xml | head -1)
-        echo "summary=Python Tests: $PASSED passed, $FAILURES failures, $ERRORS errors" >> $GITHUB_OUTPUT
+        SUMMARY=$(bash scripts/parse_junit.sh pytest-results.xml Python)
+        echo "summary=$SUMMARY" >> $GITHUB_OUTPUT
 
     - name: Upload Python test results
       if: always()
@@ -61,11 +59,8 @@ jobs:
     - name: Run Node.js unit tests
       id: js-tests
       run: |
-        node --test --test-reporter=spec --test-reporter=junit --test-reporter-destination=stdout --test-reporter-destination=js-results.xml tests/*.js || true
-        PASSED=$(grep -c "<testcase" js-results.xml || echo 0)
-        FAILURES=$(grep -c "<failure" js-results.xml || echo 0)
-        ERRORS=$(grep -c "<error" js-results.xml || echo 0)
-        SUMMARY="JS Tests: $PASSED passed, $FAILURES failures, $ERRORS errors"
+        node --test --test-reporter=spec --test-reporter=junit --test-reporter-destination=stdout --test-reporter-destination=js-results.xml tests/*.js
+        SUMMARY=$(bash scripts/parse_junit.sh js-results.xml JS)
         echo "summary=$SUMMARY" >> $GITHUB_OUTPUT
 
     - name: Upload JS test results
