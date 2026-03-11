@@ -61,11 +61,7 @@ jobs:
     - name: Run Node.js unit tests
       id: js-tests
       run: |
-        npm test -- --test-reporter=junit --test-reporter-destination=js-results.xml > test-output.txt 2>&1 || true
-        cat test-output.txt
-        # Re-run to get summary in console if needed, or parse the junit
-        # SUMMARY=$(grep -E 'tests [0-9]+, pass [0-9]+' test-output.txt | tail -n 1)
-        # Using junit for consistency:
+        node --test --test-reporter=spec --test-reporter=junit --test-reporter-destination=stdout --test-reporter-destination=js-results.xml tests/*.js || true
         PASSED=$(grep -oP 'tests="\K[^"]+' js-results.xml | head -1)
         FAILURES=$(grep -oP 'failures="\K[^"]+' js-results.xml | head -1)
         ERRORS=$(grep -oP 'errors="\K[^"]+' js-results.xml | head -1)

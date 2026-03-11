@@ -13,19 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modernized JavaScript tests using the built-in `node:test` runner and `node:assert` module.
 - Added a startup message to `src/app.py` that prints the data file path for debugging.
 - Added Grid View and Print View screenshots to `README.md`.
+- Enhanced license data extraction from `node_modules` in `src/licenses.py` to include license types and repository URLs.
+- Added a "No Intermediate States" guideline to `Agents.md` for `CHANGELOG.md` updates.
 
 ### Changed
 - Refactored CI/CD workflow to use separate, parallel jobs for Python (`ghcr.io/astral-sh/uv` container) and Node.js (`node:20-slim` container).
 - Configured JavaScript tests to run using `npm test` within the `node:20-slim` container for better environment isolation.
-- Converted large images in `README.md` to thumbnails for a more compact and organized layout.
+- Converted large images in `README.md` to thumbnails for a more compact and organized layout using `<img>` tags.
+- Improved test isolation in `tests/conftest.py` by using a temporary CSV file for `MATTER_DATA_PATH`.
+- Updated `pyproject.toml` with `pytest` configuration for better test discovery.
 
 ### Fixed
-- Fixed JS/CSS license discovery when `package-lock.json` is missing by reading dependency metadata from `node_modules`.
-- Removed the problematic and failing `test_get_licenses_data_with_package_json` from `tests/test_licenses.py`.
-- Fixed three failing `pytest` cases by correctly initializing test data using a temporary CSV file in `tests/conftest.py`.
-- Standardized pytest path resolution by adding `src` to `pythonpath` in `pyproject.toml`.
-- Removed redundant `sys.path` hack in `tests/conftest.py`.
-- Fixed inconsistent import in `tests/test_github_repo_logic.py`.
+- Fixed Node.js test runner in GitHub Actions by adding missing `--test` flag and ensuring correct reporter configuration.
+- Streamlined GitHub Actions workflow by removing redundant output redirection and error suppression in JavaScript tests.
+- Restored `npm test` functionality to work locally without arguments by including the `tests/*.js` pattern in `package.json`.
+- Updated GitHub Actions workflow to use `node --test` directly for better control over arguments and reporting.
+- Fixed Node.js unit tests in GitHub Actions by correctly passing test files to the `node --test` command.
+- Updated `package.json` test script to allow flexible argument passing.
 
 ## [0.10.0] - 2026-03-08
 
