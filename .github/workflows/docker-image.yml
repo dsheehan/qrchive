@@ -62,10 +62,10 @@ jobs:
       id: js-tests
       run: |
         node --test --test-reporter=spec --test-reporter=junit --test-reporter-destination=stdout --test-reporter-destination=js-results.xml tests/*.js || true
-        PASSED=$(grep -oP 'tests="\K[^"]+' js-results.xml | head -1)
-        FAILURES=$(grep -oP 'failures="\K[^"]+' js-results.xml | head -1)
-        ERRORS=$(grep -oP 'errors="\K[^"]+' js-results.xml | head -1)
-        if [ -z "$PASSED" ]; then SUMMARY="JS Tests: Result not found"; else SUMMARY="JS Tests: $PASSED tests, $FAILURES failures, $ERRORS errors"; fi
+        PASSED=$(grep -c "<testcase" js-results.xml || echo 0)
+        FAILURES=$(grep -c "<failure" js-results.xml || echo 0)
+        ERRORS=$(grep -c "<error" js-results.xml || echo 0)
+        SUMMARY="JS Tests: $PASSED passed, $FAILURES failures, $ERRORS errors"
         echo "summary=$SUMMARY" >> $GITHUB_OUTPUT
 
     - name: Upload JS test results
