@@ -112,6 +112,9 @@
                                 {% endif %}
                             </div>
                             <h5 class="card-title text-truncate mb-1" title="{{ row['Description'] }}">{{ row['Description'] }}</h5>
+                            {% if row['Pairing Code'] %}
+                            <p class="small text-body-secondary mb-0 pairing-code">{{ row['Pairing Code'] }}</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
