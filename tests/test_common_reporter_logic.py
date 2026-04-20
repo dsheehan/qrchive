@@ -37,19 +37,25 @@ def run_parser(xml_content, label="Tests"):
 
 @pytest.mark.parametrize("name, xml, label, expected_output, expected_status", [
     # Python (pytest) format: attributes in <testsuite>
-    ("Pytest: All passed", '<testsuite tests="2" failures="0" errors="0"></testsuite>', "Python", "Python: 2 passed, 0 failures, 0 errors", 0),
-    ("Pytest: Some failures", '<testsuite tests="2" failures="1" errors="0"></testsuite>', "Python", "Python: 1 passed, 1 failures, 0 errors", 1),
+    ("Pytest: All passed", '<testsuite tests="2" failures="0" errors="0"></testsuite>', "Python", "Python: 2 passed, 0 failures, 0 errors, 0 skipped, 0 disabled, 0 ignored", 0),
+    ("Pytest: Some failures", '<testsuite tests="2" failures="1" errors="0"></testsuite>', "Python", "Python: 1 passed, 1 failures, 0 errors, 0 skipped, 0 disabled, 0 ignored", 1),
     
     # Node.js format: count tags
-    ("Node.js: All passed", '<testsuites><testcase name="t1" /><testcase name="t2" /></testsuites>', "JS", "JS: 2 passed, 0 failures, 0 errors", 0),
-    ("Node.js: Some failures", '<testsuites><testcase name="t1" /><testcase name="t2"><failure message="fail" /></testcase></testsuites>', "JS", "JS: 1 passed, 1 failures, 0 errors", 1),
-    ("Node.js: Some errors", '<testsuites><testcase name="t1" /><testcase name="t2"><error message="err" /></testcase></testsuites>', "JS", "JS: 1 passed, 0 failures, 1 errors", 1),
+    ("Node.js: All passed", '<testsuites><testcase name="t1" /><testcase name="t2" /></testsuites>', "JS", "JS: 2 passed, 0 failures, 0 errors, 0 skipped, 0 disabled, 0 ignored", 0),
+    ("Node.js: Some failures", '<testsuites><testcase name="t1" /><testcase name="t2"><failure message="fail" /></testcase></testsuites>', "JS", "JS: 1 passed, 1 failures, 0 errors, 0 skipped, 0 disabled, 0 ignored", 1),
+    ("Node.js: Some errors", '<testsuites><testcase name="t1" /><testcase name="t2"><error message="err" /></testcase></testsuites>', "JS", "JS: 1 passed, 0 failures, 1 errors, 0 skipped, 0 disabled, 0 ignored", 1),
+    ("Node.js: Some skipped", '<testsuites><testcase name="t1" /><testcase name="t2"><skipped /></testcase></testsuites>', "JS", "JS: 1 passed, 0 failures, 0 errors, 1 skipped, 0 disabled, 0 ignored", 0),
+    ("Node.js: Some disabled", '<testsuites><testcase name="t1" /><testcase name="t2"><disabled /></testcase></testsuites>', "JS", "JS: 1 passed, 0 failures, 0 errors, 0 skipped, 1 disabled, 0 ignored", 0),
+    ("Node.js: Some ignored", '<testsuites><testcase name="t1" /><testcase name="t2"><ignored /></testcase></testsuites>', "JS", "JS: 1 passed, 0 failures, 0 errors, 0 skipped, 0 disabled, 1 ignored", 0),
+
+    # Aggregation across multiple suites with attributes
+    ("Multiple suites: attribute aggregation", '<testsuites><testsuite tests="2" failures="0" errors="0" skipped="1" disabled="0" ignored="0"></testsuite><testsuite tests="3" failures="1" errors="0" skipped="0" disabled="1" ignored="1"></testsuite></testsuites>', "JUnit", "JUnit: 1 passed, 1 failures, 0 errors, 1 skipped, 1 disabled, 1 ignored", 1),
     
     # Edge cases
     ("Missing file", None, "Tests", "0 passed, 0 failures, 0 errors (result file not found)", 1),
-    ("Empty file", "", "Tests", "Tests: 0 passed, 0 failures, 0 errors", 1),
-    ("Zero tests", '<testsuite tests="0" failures="0" errors="0"></testsuite>', "Tests", "Tests: 0 passed, 0 failures, 0 errors", 1),
-    ("Failure with message containing tags", '<testsuites><testcase name="t1"><failure message="Expected <failure> but got <something else>" /></testcase></testsuites>', "JS", "JS: 0 passed, 1 failures, 0 errors", 1),
+    ("Empty file", "", "Tests", "Tests: 0 passed, 0 failures, 0 errors, 0 skipped, 0 disabled, 0 ignored", 1),
+    ("Zero tests", '<testsuite tests="0" failures="0" errors="0"></testsuite>', "Tests", "Tests: 0 passed, 0 failures, 0 errors, 0 skipped, 0 disabled, 0 ignored", 1),
+    ("Failure with message containing tags", '<testsuites><testcase name="t1"><failure message="Expected <failure> but got <something else>" /></testcase></testsuites>', "JS", "JS: 0 passed, 1 failures, 0 errors, 0 skipped, 0 disabled, 0 ignored", 1),
 ])
 def test_parse_junit_sh(name, xml, label, expected_output, expected_status):
     output, status = run_parser(xml, label)
