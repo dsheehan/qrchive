@@ -87,8 +87,11 @@
         </div>
 
         <div id="gridView" class="d-none">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="devicesGrid">
+            <div id="devicesGrid">
                 {% for row in data %}
+                {% if loop.index0 % 16 == 0 %}
+                <div class="print-page row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                {% endif %}
                 <div class="col device-card-col" data-mac="{{ row['MAC'] }}">
                     <div class="card h-100 shadow-sm border-0 bg-light-subtle">
                         <div class="edit-btn-container">
@@ -109,9 +112,15 @@
                                 {% endif %}
                             </div>
                             <h5 class="card-title text-truncate mb-1" title="{{ row['Description'] }}">{{ row['Description'] }}</h5>
+                            {% if row['Pairing Code'] %}
+                            <p class="small text-body-secondary mb-0 pairing-code">{{ row['Pairing Code'] }}</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
+                {% if loop.index % 16 == 0 or loop.last %}
+                </div>
+                {% endif %}
                 {% endfor %}
             </div>
         </div>

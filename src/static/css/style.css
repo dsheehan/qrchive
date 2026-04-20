@@ -108,9 +108,24 @@
 
 /* Print Styles */
 @media print {
+    @page {
+        margin: 0.35in;
+    }
+
     /* Hide non-printable elements */
     .navbar, .btn, .btn-group, .dropdown, .search-container, .edit-btn-container, .update-indicator-btn, .navbar-version {
         display: none !important;
+    }
+
+    .container > .d-flex.flex-wrap.gap-2.align-items-center.mb-3 {
+        display: none !important;
+    }
+
+    .container > h1 {
+        display: block !important;
+        margin: 0 0 0.3rem 0 !important;
+        font-size: 1.1rem !important;
+        line-height: 1.2 !important;
     }
 
     /* Force Grid View visibility and hide List View */
@@ -119,6 +134,8 @@
     }
     #gridView {
         display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     /* Reset container and body for print */
@@ -133,46 +150,90 @@
         max-width: 100% !important;
         width: 100% !important;
         margin: 0 !important;
-        padding: 0 !important;
+        padding: 0 0.08in !important;
     }
 
     /* Grid adjustments for print */
     #devicesGrid {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        row-gap: 0.5rem !important;
-        column-gap: 0.5rem !important;
+        display: block !important;
+    }
+
+    .print-page {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        --bs-gutter-x: 0 !important;
+        --bs-gutter-y: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        align-content: start;
+        min-height: 0 !important;
+        row-gap: 0.2rem !important;
+        column-gap: 0.2rem !important;
+        break-before: auto;
+        page-break-before: auto;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .print-page:first-child {
+        break-before: avoid-page;
+        page-break-before: avoid;
+    }
+
+    .print-page:last-child {
+        break-after: auto;
+        page-break-after: auto;
     }
 
     .device-card-col {
-        width: 23% !important; /* Approximately 4 columns with some margin */
+        width: auto !important;
+        min-width: 0;
+        max-width: none !important;
+        box-sizing: border-box;
         page-break-inside: avoid;
         break-inside: avoid;
-        margin-bottom: 0.5rem;
-        padding: 0 0.25rem !important;
+        margin-bottom: 0 !important;
+        padding: 0 !important;
     }
 
     .card {
         border: 1px solid #dee2e6 !important;
         box-shadow: none !important;
         background-color: white !important;
+        margin: 0 !important;
     }
 
     .card-body {
-        padding: 0.5rem !important;
+        padding: 0.2rem !important;
+    }
+
+    .card-body .mb-3.mt-2 {
+        margin-top: 0 !important;
+        margin-bottom: 0.25rem !important;
     }
 
     .card-title {
-        font-size: 0.8rem !important;
+        font-size: 0.7rem !important;
+        line-height: 1.1 !important;
         color: black !important;
-        margin-top: 0.25rem !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
     }
 
     /* Ensure QR codes are visible and correctly sized */
+    .qr-preview-container,
+    .qr-placeholder {
+        max-width: 110px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .qr-placeholder canvas {
         box-shadow: none !important;
         border: 1px solid #eee;
-        width: 100% !important;
-        height: auto !important;
+        width: 110px !important;
+        height: 110px !important;
     }
 }
