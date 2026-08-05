@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Added `@spaceavocado/librarian` as a new JavaScript dependency for query parsing; adapted via a custom `normalizeQuery` pre-processor (translating bare tokens and `field=value` syntax into librarian's quoted-term format) and a `buildSearchContext` helper that flattens record fields into a searchable string with field-prefixed tokens.
+- Added `src/static/js/filter_query.js` implementing client-side product filtering with support for wildcard patterns (prefix, suffix, contains) and exact quoted-string matching.
+- Added JavaScript unit tests for filter query logic (`tests/js/test_filter_query_logic.js`).
+- Added Playwright integration tests for filter query UI behaviour (`tests/test_filter_query_playwright.py`).
+
+### Changed
+- Reorganised JavaScript test files into a dedicated `tests/js/` subdirectory (moved `test_version_logic.js` and `test_whats_new_logic.js`).
+
 ## [0.12.0] - 2026-04-19
 
 ### Added

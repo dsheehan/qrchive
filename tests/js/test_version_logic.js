@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const { isNewerVersion } = require('../src/static/js/utils.js');
+const { isNewerVersion } = require('../../src/static/js/utils.js');
 
 test('isNewerVersion handles various version strings correctly', (t) => {
     const testCases = [
