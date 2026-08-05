@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated GitHub Actions CI/CD workflow to use `node:24-slim` container (replacing `node:20-slim`) to address Node.js 20 deprecation on GitHub Actions runners.
 - Updated `actions/checkout` and `actions/upload-artifact` from `@v4` to `@v7` to resolve Node.js 20 deprecation warnings from these actions.
 
+### Fixed
+- Fixed pytest collecting zero tests in GitHub Actions by explicitly setting `PYTHONPATH` to `src/` in the CI run step, ensuring test imports (e.g. `from app import app`) succeed during collection.
+
 ## [0.12.0] - 2026-04-19
 
 ### Added

@@ -30,6 +30,7 @@ jobs:
     - name: Run unit tests
       id: python-tests
       run: |
+        export PYTHONPATH="$(pwd)/src:${PYTHONPATH:-}"
         uv run pytest --junitxml=pytest-results.xml
         SUMMARY=$(bash scripts/parse_junit.sh pytest-results.xml Python)
         echo "summary=$SUMMARY" >> $GITHUB_OUTPUT
