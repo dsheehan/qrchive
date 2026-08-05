@@ -45,7 +45,7 @@ jobs:
     name: Run JS Tests
     runs-on: ubuntu-latest
     container:
-      image: node:20-slim
+      image: node:24-slim
     outputs:
       results: ${{ steps.js-tests.outputs.summary }}
     steps:
