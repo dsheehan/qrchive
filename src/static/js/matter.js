@@ -660,8 +660,8 @@ window.addEventListener("popstate", (event) => {
     }
     function applyGlobalFilter(){
         const table = getTable();
-        const q = (document.getElementById('globalFilter')?.value || '').toLowerCase().trim();
-        const words = q.split(/\s+/).filter(w => w.length > 0);
+        const q = (document.getElementById('globalFilter')?.value || '').trim();
+        const rowMatchesByMac = new Map();
 
         // Filter Table Rows
         if (table) {
@@ -669,24 +669,23 @@ window.addEventListener("popstate", (event) => {
             const rows = getBodyRows(table);
             
             Array.from(rows).forEach(tr=>{
-                let match = true;
-                if (words.length > 0) {
-                    for (const word of words) {
-                        let wordFound = false;
-                        for (let i=0; i<headers.length; i++) {
-                            if (!isColumnVisible(i)) continue;
-                            const text = (tr.cells[i]?.innerText || '').toLowerCase();
-                            if (text.includes(word)) {
-                                wordFound = true;
-                                break;
-                            }
-                        }
-                        if (!wordFound) {
-                            match = false;
-                            break;
-                        }
-                    }
+                const searchableRecord = {};
+                for (let i=0; i<headers.length; i++) {
+                    if (!isColumnVisible(i)) continue;
+                    const headerName = (headers[i]?.querySelector('span')?.innerText || headers[i]?.innerText || '').trim();
+                    if (!headerName) continue;
+                    searchableRecord[headerName] = (tr.cells[i]?.innerText || '').trim();
                 }
+
+                const match = window.FilterQuery
+                    ? window.FilterQuery.matchesRecord(searchableRecord, q)
+                    : true;
+
+                const mac = tr.getAttribute('data-mac');
+                if (mac) {
+                    rowMatchesByMac.set(mac, !!match);
+                }
+
                 tr.style.display = match ? '' : 'none';
             });
         }
@@ -694,16 +693,15 @@ window.addEventListener("popstate", (event) => {
         // Filter Grid Cards
         const gridItems = document.querySelectorAll('.device-card-col');
         gridItems.forEach(item => {
-            let match = true;
-            if (words.length > 0) {
-                const text = item.innerText.toLowerCase();
-                for (const word of words) {
-                    if (!text.includes(word)) {
-                        match = false;
-                        break;
-                    }
-                }
+            const mac = item.getAttribute('data-mac');
+            if (mac && rowMatchesByMac.has(mac)) {
+                item.classList.toggle('d-none', !rowMatchesByMac.get(mac));
+                return;
             }
+
+            const match = window.FilterQuery
+                ? window.FilterQuery.matchesRecord({ content: item.innerText || '' }, q)
+                : true;
             item.classList.toggle('d-none', !match);
         });
     }

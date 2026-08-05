@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const { isNewerVersion } = require('../src/static/js/utils.js');
+const { isNewerVersion } = require('../../src/static/js/utils.js');
 
 // Mock window.APP_CONFIG
 global.window = {

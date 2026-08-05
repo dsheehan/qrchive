@@ -1,15 +1,9 @@
-import contextlib
 import re
 import os
-import threading
 import tempfile
 from pathlib import Path
 
 import pypdf
-import pytest
-from werkzeug.serving import make_server
-
-from app import app
 
 
 _JS_DIR = Path(__file__).parent / "js"
@@ -27,20 +21,6 @@ def _build_test_csv(total_rows):
             f"Product {i},Switch,00:11:22:33:44:{i:02X},{10000000000 + i},Device {i},test-qr-{i}\n"
         )
     return "".join(rows)
-
-
-@pytest.fixture
-def live_server(matter_data_path):
-    matter_data_path(_build_test_csv(36))
-    server = make_server("127.0.0.1", 0, app)
-    port = server.socket.getsockname()[1]
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    try:
-        yield f"http://127.0.0.1:{port}"
-    finally:
-        server.shutdown()
-        thread.join(timeout=3)
 
 
 def _extract_grid_layout_from_dom(page):
@@ -62,30 +42,21 @@ def _extract_pdf_page_device_counts(pdf_path):
     return device_counts
 
 
-def test_print_view_has_4x4_grid_layout_for_full_pages(live_server):
-    playwright_sync_api = pytest.importorskip("playwright.sync_api")
-
-    with playwright_sync_api.sync_playwright() as playwright:
-        try:
-            browser = playwright.chromium.launch(channel="msedge")
-        except Exception as exc:  # pragma: no cover - environment dependent
-            pytest.skip(f"Playwright browser is not available: {exc}")
-
-        with contextlib.closing(browser):
-            page = browser.new_page()
-            page.goto(f"{live_server}/", wait_until="networkidle")
-            page.evaluate("window.setView('grid')")
-            page.wait_for_timeout(500)
-            page.emulate_media(media="print")
-            layout = _extract_grid_layout_from_dom(page)
-            fd, pdf_path = tempfile.mkstemp(suffix=".pdf")
-            os.close(fd)
-            try:
-                page.pdf(path=pdf_path, print_background=True, format="Letter")
-                physical_page_device_counts = _extract_pdf_page_device_counts(pdf_path)
-            finally:
-                if os.path.exists(pdf_path):
-                    os.remove(pdf_path)
+def test_print_view_has_4x4_grid_layout_for_full_pages(live_server, page):
+    base_url = live_server(_build_test_csv(36))
+    page.goto(f"{base_url}/", wait_until="networkidle")
+    page.evaluate("window.setView('grid')")
+    page.wait_for_timeout(500)
+    page.emulate_media(media="print")
+    layout = _extract_grid_layout_from_dom(page)
+    fd, pdf_path = tempfile.mkstemp(suffix=".pdf")
+    os.close(fd)
+    try:
+        page.pdf(path=pdf_path, print_background=True, format="Letter")
+        physical_page_device_counts = _extract_pdf_page_device_counts(pdf_path)
+    finally:
+        if os.path.exists(pdf_path):
+            os.remove(pdf_path)
 
     assert layout == [[4, 4, 4, 4], [4, 4, 4, 4], [4]]
     assert physical_page_device_counts, "Expected at least one physical print page"

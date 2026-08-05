@@ -27,7 +27,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha256-CDOy6cOibCWEdsRiZuaHf8dSGGJRYuBGC+mjoJimHGw=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script type="module">
+        import { parse } from "https://cdn.jsdelivr.net/npm/@spaceavocado/librarian@0.4.5/lib/librarian.esm.js";
+        window.LIBRARIAN_PARSE = parse;
+    </script>
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/filter_query.js') }}"></script>
     <script src="{{ url_for('static', filename='js/matter.js') }}"></script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     {% block scripts %}{% endblock %}
