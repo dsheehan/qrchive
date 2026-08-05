@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed pytest collecting zero tests in GitHub Actions by explicitly setting `PYTHONPATH` to `src/` in the CI run step, ensuring test imports (e.g. `from app import app`) succeed during collection.
+- Fixed JavaScript tests collecting zero tests in GitHub Actions by updating the test glob from `tests/*.js` to `tests/js/*.js` to match the reorganised test file location.
 
 ## [0.12.0] - 2026-04-19
 
