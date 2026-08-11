@@ -99,7 +99,7 @@ let currentCode, currentProduct, currentPrecomputedQR;
 let bootstrapModal;
 let deviceModal;
 
-function openDeviceModal(mac = null, skipPushState = false) {
+function openDeviceModal(recordId = null, skipPushState = false) {
     const modalEl = document.getElementById("deviceModal");
     if (!deviceModal) {
         deviceModal = new bootstrap.Modal(modalEl);
@@ -119,13 +119,13 @@ function openDeviceModal(mac = null, skipPushState = false) {
 
     const form = document.getElementById("deviceForm");
     form.reset();
-    document.getElementById("originalMac").value = mac || "";
-    document.getElementById("deviceModalLabel").innerText = mac ? "Edit Device" : "Add New Device";
-    document.getElementById("deleteBtn").style.display = mac ? "block" : "none";
+    document.getElementById("originalRecordId").value = recordId || "";
+    document.getElementById("deviceModalLabel").innerText = recordId ? "Edit Device" : "Add New Device";
+    document.getElementById("deleteBtn").style.display = recordId ? "block" : "none";
 
-    if (mac) {
-        // Find the row with this MAC and populate form
-        const row = document.querySelector(`tr[data-mac="${mac}"]`);
+    if (recordId) {
+        // Find the row with this record ID and populate form
+        const row = document.querySelector(`tr[data-record-id="${recordId}"]`);
         if (row) {
             const cells = row.querySelectorAll('td[data-header]');
             cells.forEach(td => {
@@ -145,8 +145,8 @@ function openDeviceModal(mac = null, skipPushState = false) {
 
     if (!skipPushState) {
         const params = new URLSearchParams(window.location.search);
-        if (mac) {
-            params.set("edit", mac);
+        if (recordId) {
+            params.set("edit", recordId);
             params.delete("add");
         } else {
             params.set("add", "true");
@@ -159,7 +159,7 @@ function openDeviceModal(mac = null, skipPushState = false) {
         params.delete("maximized");
         
         const newUrl = window.location.pathname + "?" + params.toString();
-        window.history.pushState({ edit: mac, add: !mac }, "", newUrl);
+        window.history.pushState({ edit: recordId, add: !recordId }, "", newUrl);
     }
 
     deviceModal.show();
@@ -175,14 +175,14 @@ async function saveDevice() {
     const formData = new FormData(form);
     const data = {};
     formData.forEach((value, key) => {
-        if (key !== 'originalMac') {
+        if (key !== 'originalRecordId') {
             data[key] = value;
         }
     });
 
-    const originalMac = document.getElementById("originalMac").value;
-    const isEdit = originalMac !== "";
-    const url = isEdit ? `/matter/${encodeURIComponent(originalMac)}` : '/matter';
+    const originalRecordId = document.getElementById("originalRecordId").value;
+    const isEdit = originalRecordId !== "";
+    const url = isEdit ? `/matter/${encodeURIComponent(originalRecordId)}` : '/matter';
     const method = isEdit ? 'PUT' : 'POST';
 
     try {
@@ -208,15 +208,15 @@ async function saveDevice() {
 }
 
 async function deleteDevice() {
-    const originalMac = document.getElementById("originalMac").value;
-    if (!originalMac) return;
+    const originalRecordId = document.getElementById("originalRecordId").value;
+    if (!originalRecordId) return;
 
-    if (!confirm(`Are you sure you want to delete the device with MAC: ${originalMac}?`)) {
+    if (!confirm(`Are you sure you want to delete this device?`)) {
         return;
     }
 
     try {
-        const response = await fetch(`/matter/${encodeURIComponent(originalMac)}`, {
+        const response = await fetch(`/matter/${encodeURIComponent(originalRecordId)}`, {
             method: 'DELETE'
         });
 
@@ -545,13 +545,13 @@ function checkUrlParams() {
     const qr = params.get("qr");
     const maximized = params.get("maximized") === "true";
     
-    const editMac = params.get("edit");
+    const editRecordId = params.get("edit");
     const addMode = params.get("add") === "true";
 
     if (code && product) {
         showQRCode(code, product, qr, true, maximized);
-    } else if (editMac) {
-        openDeviceModal(editMac, true);
+    } else if (editRecordId) {
+        openDeviceModal(editRecordId, true);
     } else if (addMode) {
         openDeviceModal(null, true);
     }
@@ -570,13 +570,13 @@ window.addEventListener("popstate", (event) => {
         const qr = params.get("qr");
         const maximized = params.get("maximized") === "true";
         
-        const editMac = params.get("edit");
+        const editRecordId = params.get("edit");
         const addMode = params.get("add") === "true";
 
         if (code && product) {
             showQRCode(code, product, qr, true, maximized);
-        } else if (editMac) {
-            openDeviceModal(editMac, true);
+        } else if (editRecordId) {
+            openDeviceModal(editRecordId, true);
         } else if (addMode) {
             openDeviceModal(null, true);
         } else {
@@ -681,9 +681,9 @@ window.addEventListener("popstate", (event) => {
                     ? window.FilterQuery.matchesRecord(searchableRecord, q)
                     : true;
 
-                const mac = tr.getAttribute('data-mac');
-                if (mac) {
-                    rowMatchesByMac.set(mac, !!match);
+                const recordId = tr.getAttribute('data-record-id');
+                if (recordId) {
+                    rowMatchesByMac.set(recordId, !!match);
                 }
 
                 tr.style.display = match ? '' : 'none';
@@ -693,9 +693,9 @@ window.addEventListener("popstate", (event) => {
         // Filter Grid Cards
         const gridItems = document.querySelectorAll('.device-card-col');
         gridItems.forEach(item => {
-            const mac = item.getAttribute('data-mac');
-            if (mac && rowMatchesByMac.has(mac)) {
-                item.classList.toggle('d-none', !rowMatchesByMac.get(mac));
+            const recordId = item.getAttribute('data-record-id');
+            if (recordId && rowMatchesByMac.has(recordId)) {
+                item.classList.toggle('d-none', !rowMatchesByMac.get(recordId));
                 return;
             }
 

@@ -29,7 +29,7 @@
                 <ul class="dropdown-menu p-2 columns-dropdown-menu">
                     {% for header in headers %}
                     <li class="form-check px-2">
-                        <input class="form-check-input column-toggle" type="checkbox" value="{{ loop.index0 }}" id="col-toggle-{{ loop.index0 }}" {% if header != 'QR' %}checked{% endif %}>
+                        <input class="form-check-input column-toggle" type="checkbox" value="{{ loop.index0 }}" id="col-toggle-{{ loop.index0 }}" {% if header != 'QR' and header != 'id' %}checked{% endif %}>
                         <label class="form-check-label" for="col-toggle-{{ loop.index0 }}">{{ header }}</label>
                     </li>
                     {% endfor %}
@@ -64,7 +64,7 @@
                 </thead>
                 <tbody>
                     {% for row in data %}
-                    <tr data-mac="{{ row['MAC'] }}">
+                    <tr data-record-id="{{ row['id'] }}" data-mac="{{ row.get('MAC', '') }}">
                         {% for header in headers %}
                         <td data-header="{{ header }}">{{ row[header] }}</td>
                         {% endfor %}
@@ -75,7 +75,7 @@
                                     <i class="fa-solid fa-qrcode"></i>
                                 </button>
                                 {% endif %}
-                                <button class="btn btn-secondary btn-sm" onclick="openDeviceModal('{{ row['MAC'] }}')" title="Edit">
+                                <button class="btn btn-secondary btn-sm" onclick="openDeviceModal('{{ row['id'] }}')" title="Edit">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                             </div>
@@ -92,10 +92,10 @@
                 {% if loop.index0 % 16 == 0 %}
                 <div class="print-page row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 {% endif %}
-                <div class="col device-card-col" data-mac="{{ row['MAC'] }}">
+                <div class="col device-card-col" data-record-id="{{ row['id'] }}" data-mac="{{ row.get('MAC', '') }}">
                     <div class="card h-100 shadow-sm border-0 bg-light-subtle">
                         <div class="edit-btn-container">
-                            <button class="btn btn-secondary btn-sm" onclick="openDeviceModal('{{ row['MAC'] }}')" title="Edit">
+                            <button class="btn btn-secondary btn-sm" onclick="openDeviceModal('{{ row['id'] }}')" title="Edit">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </button>
                         </div>
