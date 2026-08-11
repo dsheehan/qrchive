@@ -93,11 +93,11 @@ def add_matter():
         return jsonify({"error": str(e)}), 400
 
 
-@app.route('/matter/<mac>', methods=['PUT'])
-def update_matter(mac):
+@app.route('/matter/<record_id>', methods=['PUT'])
+def update_matter(record_id):
     updated_device = request.json
     repo = get_repo()
-    result = repo.update(mac, updated_device)
+    result = repo.update(record_id, updated_device)
     
     if result is None:
         return jsonify({"error": "Device not found"}), 404
@@ -105,10 +105,10 @@ def update_matter(mac):
     return jsonify(result)
 
 
-@app.route('/matter/<mac>', methods=['DELETE'])
-def delete_matter(mac):
+@app.route('/matter/<record_id>', methods=['DELETE'])
+def delete_matter(record_id):
     repo = get_repo()
-    if repo.delete(mac):
+    if repo.delete(record_id):
         return jsonify({"success": True}), 200
     else:
         return jsonify({"error": "Device not found"}), 404

@@ -7,7 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added stable `id` field as the primary key for every record, replacing MAC address as the record identity.
+- Added `src/record_id.py` with base62 ID generation (5-character default, configurable via `QRCHIVE_RECORD_ID_LENGTH` env var), safety validation, and normalization logic.
+- Existing CSV files without an `id` column are automatically migrated on first read; generated IDs are persisted immediately.
+- Safe manually-entered IDs (URL-unreserved characters only: `A-Z a-z 0-9 _ . ~ -`) are preserved; unsafe or duplicate IDs are regenerated.
+- Added `tests/test_record_id.py` covering ID generation, safety validation, normalization, and API integration (update/delete by ID, MAC change, CSV persistence).
+- Added `test_id_column_toggle_is_unchecked_by_default` and `test_product_column_toggle_is_checked_by_default` tests to `test_qr_visibility.py`.
+
 ### Changed
+- Edit and delete API routes changed from `/matter/<mac>` to `/matter/<record_id>`.
+- Frontend JS updated to use `recordId` / `originalRecordId` instead of MAC for all CRUD operations and URL state.
+- Table rows and grid cards now carry `data-record-id` attribute (in addition to `data-mac` for reference).
+- `id` column is hidden by default in the column toggle (alongside `QR`).
+- Import no longer de-duplicates by MAC; all imported rows are appended with unique IDs assigned.
 - Increased QR code size in print rendering mode by 50px (from 110px to 150px) to reduce waste whitespace.
 
 ## [0.13.0] - 2026-08-04

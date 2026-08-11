@@ -13,13 +13,17 @@ def _build_filter_test_csv():
 
 
 def _visible_products(page):
-    return page.eval_on_selector_all(
-        "#devicesTable tbody tr",
+    return page.evaluate(
         """
-        (rows) => rows
-            .filter((row) => row.style.display !== 'none')
-            .map((row) => (row.cells[0]?.innerText || '').trim())
-        """,
+        () => {
+            const headers = Array.from(document.querySelectorAll('#devicesTable thead th'))
+                .map(th => th.querySelector('span')?.innerText.trim() || th.innerText.trim());
+            const productIdx = headers.indexOf('Product');
+            return Array.from(document.querySelectorAll('#devicesTable tbody tr'))
+                .filter(row => row.style.display !== 'none')
+                .map(row => (row.cells[productIdx]?.innerText || '').trim());
+        }
+        """
     )
 
 
