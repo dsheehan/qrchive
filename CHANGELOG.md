@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `test_id_column_toggle_is_unchecked_by_default` and `test_product_column_toggle_is_checked_by_default` tests to `test_qr_visibility.py`.
 
 ### Changed
+- Updated README and DEVELOPMENT guide
+- Added `[Changelog](CHANGELOG.md)` link to the README navigation bar.
 - Edit and delete API routes changed from `/matter/<mac>` to `/matter/<record_id>`.
 - Frontend JS updated to use `recordId` / `originalRecordId` instead of MAC for all CRUD operations and URL state.
 - Table rows and grid cards now carry `data-record-id` attribute (in addition to `data-mac` for reference).

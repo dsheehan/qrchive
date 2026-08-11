@@ -1,34 +1,32 @@
 <div align="center">
 
-# ⚡ QRchive
+# QRchive
 
 [![Python Version](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/flask-3.1.2-green.svg)](https://flask.palletsprojects.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/dsheehan/qrchive?tab=MIT-1-ov-file)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
 [![GitHub Release](https://img.shields.io/github/v/release/dsheehan/qrchive)](https://github.com/dsheehan/qrchive/releases)
 [![Docker Image CI](https://github.com/dsheehan/qrchive/actions/workflows/docker-image.yml/badge.svg)](https://github.com/dsheehan/qrchive/actions/workflows/docker-image.yml)
+[![GitHub last commit](https://img.shields.io/github/last-commit/dsheehan/qrchive)](https://github.com/dsheehan/qrchive/commits/main)
 
-**The ultimate open-source dashboard for managing Matter devices and their QR codes.**
+**QRchive** is a dockerized, self-hosted web application to help store your Matter QR codes and device pairing codes. Scan directly from your mobile device or webcam, print them out for physical reference, and keep all your smart home pairing information in one place.
 
-[Features](#-features) • [Quick Start](#-quick-start-recommended) • [Docker](#-quick-start-recommended) • [Tech Stack](#-tech-stack)
+[Features](#-features) • [Screenshots](#-screenshots) • [Quick Start - Docker](#-quick-start-recommended) • [Changelog](CHANGELOG.md) • [Development Guide](DEVELOPMENT.md) • [License](https://github.com/dsheehan/qrchive?tab=MIT-1-ov-file)
 
 </div>
 
 ---
 
-### 🚀 Overview
-
-**QRchive** is a sleek, modern, and lightweight web application designed to help you manage your Matter connectivity devices. Whether you're tracking MAC addresses, pairing codes, or generating/scanning QR data, QRchive provides a clean interface to keep your smart home hardware organized.
-
 ### ✨ Features
 
 - 📱 **Matter-Ready**: Built specifically for tracking Matter-compatible devices.
-- 🔍 **QR Scanner**: Integrated camera-based and image-upload QR code readers.
+- 🔍 **QR Scanner**: Scan QR codes directly from your mobile device, webcam, or by uploading an image.
 - 📊 **CSV Management**: Seamlessly import and export your device lists.
 - 🎨 **Modern UI**: Clean, responsive dashboard with **Dark Mode** support.
 - 🛠️ **Full CRUD**: Add, edit, and delete devices with ease.
-- 📦 **Docker Support**: Containerized for instant deployment.
+- 🖨️ **Print View**: Print your device QR codes in a tidy grid layout for physical reference.
+- 📦 **Docker Support**: Containerized for easy self-hosted deployment.
 
 ### 📸 Screenshots
 
@@ -38,15 +36,6 @@
 <img src="https://github.com/user-attachments/assets/baa001ed-1421-4998-9a76-5fcf97fb4664" alt="View QR Code" height="200">
 <img src="https://github.com/user-attachments/assets/7fd36e3a-2557-4e05-a6b4-5d52d0184754" alt="Add/Edit Device, with Camera/Image upload" height="200">
 
-
-### 🛠 Tech Stack
-
-- **Backend:** [Python 3.14+](https://www.python.org/) + [Flask](https://flask.palletsprojects.com/)
-- **Frontend:** HTML5, CSS3, JavaScript (Bootstrap 5 + FontAwesome)
-- **Package Manager:** [uv](https://github.com/astral-sh/uv)
-- **Containerization:** [Docker](https://www.docker.com/)
-
----
 
 ### 🚀 Quick Start (Recommended)
 
@@ -67,9 +56,6 @@ services:
     volumes:
       - /path/to/qrchive/data:/data
     restart: unless-stopped
-
-volumes:
-  qrchive-data:
 ```
 
 Run with: `docker-compose up -d`
@@ -84,16 +70,6 @@ docker run -d \
   --name qrchive \
   ghcr.io/dsheehan/qrchive:latest
 ```
-
----
-
-### 🛠 Development
-
-Interested in contributing or building from source? See our [Development Guide](DEVELOPMENT.md).
-
-### 📜 License
-
-Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
 

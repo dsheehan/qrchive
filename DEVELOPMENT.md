@@ -2,6 +2,15 @@
 
 This guide is for developers who want to contribute to **QRchive** or run it from source.
 
+### 🛠 Tech Stack
+
+- **Backend:** [Python 3.14+](https://www.python.org/) + [Flask](https://flask.palletsprojects.com/)
+- **Frontend:** HTML5, CSS3, JavaScript (Bootstrap 5 + FontAwesome)
+- **Package Manager:** [uv](https://github.com/astral-sh/uv)
+- **Containerization:** [Docker](https://www.docker.com/)
+
+---
+
 ### 🏁 Quick Start for Developers
 
 #### Using `uv` (Recommended)
@@ -27,6 +36,26 @@ If you want to build and run the container locally:
 ```bash
 docker build -t qrchive .
 docker run -p 5000:5000 -v qrchive-data:/data qrchive
+```
+
+---
+
+### 🧪 Running Tests
+
+#### Python Tests (pytest)
+
+Run the full Python test suite using `uv`:
+
+```bash
+uv run pytest
+```
+
+#### JavaScript Tests (npm)
+
+Run the Node.js unit tests:
+
+```bash
+npm test
 ```
 
 ---
